@@ -26,7 +26,7 @@ namespace Benchmark
             int coreCount = Environment.ProcessorCount;
             Console.WriteLine($"This system has {coreCount} physical cores.");
 
-            // Define a complex mathematical operation
+            // Define a complex mathematical operation (not really its just a simple square root and log)
             const int numIterations = 1000000;
             Func<double, double, double> mathOperation = (x, y) =>
             {
@@ -37,7 +37,7 @@ namespace Benchmark
                 }
                 return result;
             };
-            Console.WriteLine($"The benchmark operation will perform {numIterations} iterations of a complex mathematical operation using Sqrt and Log10 functions.");
+            Console.WriteLine($"The benchmark operation will perform {numIterations} iterations");
 
             // Benchmark each core 5 times with 5 iterations per run and take the average
             double[] results = new double[coreCount];
@@ -62,9 +62,11 @@ namespace Benchmark
                         runTime += elapsedMs;
                         Console.WriteLine($"{elapsedMs}ms");
                     }
+                    //Average time divided by 5.0 (using float because of precision) because of 5 iteration
                     Console.WriteLine($"Core {i + 1}, run {j + 1} took an average of {runTime / 5.0}ms to complete.");
                     totalTime += runTime;
                 }
+                //Total time divided by 25.0 because of 5 iteration 5 times (5*5=25 (quik mafs))
                 times[i] = totalTime / 25.0;
                 totalTimes[i] = totalTime;
                 Console.WriteLine($"Average time for core {i + 1}: {times[i]}ms");
