@@ -20,6 +20,7 @@ namespace Benchmark
 
             // Check the number of physical cores on the CPU
             int coreCount = 0;
+
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
             {
                 coreCount += int.Parse(item["NumberOfCores"].ToString());
