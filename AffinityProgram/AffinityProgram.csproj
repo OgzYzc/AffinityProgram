@@ -9,7 +9,7 @@
     <RootNamespace>AffinityProgram</RootNamespace>
     <AssemblyName>AffinityProgram</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-	<LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -45,18 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="data\registryData.cs" />
-    <Compile Include="deviceInfo\NetworkAdapterInfo.cs" />
-    <Compile Include="deviceInfo\PCIDeviceInfo.cs" />
-    <Compile Include="deviceInfo\USBDeviceInfo.cs" />
-    <Compile Include="getDevice\getNICDevices.cs" />
-    <Compile Include="getDevice\getPCIDevices.cs" />
-    <Compile Include="getDevice\getUSBDevices.cs" />
+    <Compile Include="Controller\Concrete\Concrete_RegistryPath.cs" />
+    <Compile Include="Controller\Controller_List\Controller_ListNicDevices.cs" />
+    <Compile Include="Controller\Controller_List\Controller_ListPciDevices.cs" />
+    <Compile Include="Controller\Controller_List\Controller_ListUsbDevices.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetNicDevices.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetPciDevices.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetUsbDevices.cs" />
+    <Compile Include="Model\Model_NicDevices.cs" />
+    <Compile Include="Model\Model_PciDevices.cs" />
+    <Compile Include="Model\Model_UsbDevices.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="setDeviceAffinity\setNICDevices.cs" />
-    <Compile Include="setDeviceAffinity\setPCIDevices.cs" />
-    <Compile Include="setDeviceAffinity\setUSBDevices.cs" />
+    <Compile Include="Queries\Abstracrt\Abstract_DeviceInfo.cs" />
+    <Compile Include="Queries\Concrete\Query_NicDevices.cs" />
+    <Compile Include="Queries\Concrete\Query_PciDevices.cs" />
+    <Compile Include="Queries\Concrete\Query_UsbDevices.cs" />
+    <Compile Include="View\View_MainMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
