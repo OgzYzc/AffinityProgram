@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Benchmark
 {
@@ -23,11 +19,16 @@ namespace Benchmark
             Console.ReadKey();
 
             // Check the number of physical cores on the CPU
-            int coreCount = Environment.ProcessorCount;
+            int coreCount = 0;
+            foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
+            {
+                coreCount += int.Parse(item["NumberOfCores"].ToString());
+            }
+
             Console.WriteLine($"This system has {coreCount} physical cores.");
 
             // Define a complex mathematical operation (not really its just a simple square root and log)
-            const int numIterations = 1000000;
+            const int numIterations = 100000000;
             Func<double, double, double> mathOperation = (x, y) =>
             {
                 double result = 0;
