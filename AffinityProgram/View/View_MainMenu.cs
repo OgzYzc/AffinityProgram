@@ -30,11 +30,12 @@ namespace AffinityProgram.View
 
             //There may be a better way to do this but I CANNOT care anymore
             //Submenu options for NIC
+            //I don't know what to do with third options but I keep them in any case
             string[] subOptions = new string[]
             {
                 "Add affinity",
                 "Show devices",
-                "Benchmark",
+                "Suboption 1.3",
             };
             //Submenu options for PCI
             string[] subOptions2 = new string[]
