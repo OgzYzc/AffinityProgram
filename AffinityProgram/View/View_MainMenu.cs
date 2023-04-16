@@ -66,21 +66,22 @@ namespace AffinityProgram.View
                 // Determine which options to display based on whether we're in the main menu or the submenu
                 string[] displayOptions = mainOptions;
 
-                if (previousSelectedIndex == 0)
+                switch (previousSelectedIndex)
                 {
-                    displayOptions = subOptions;
-                }
-                else if (previousSelectedIndex == 1)
-                {
-                    displayOptions = subOptions2;
-                }
-                else if (previousSelectedIndex == 2)
-                {
-                    displayOptions = subOptions3;
-                }
-                else if (previousSelectedIndex == 3)
-                {
-                    displayOptions = subOptions4;
+                    case 0:
+                        displayOptions = subOptions;
+                        break;
+                        case 1:
+                        displayOptions = subOptions2;
+                        break;
+                        case 2:
+                        displayOptions = subOptions3;
+                        break;
+                            case 3:
+                        displayOptions = subOptions4;
+                        break;
+                    default:
+                        break;
                 }
 
                 // Display the menu options
@@ -206,7 +207,7 @@ namespace AffinityProgram.View
                                     case 0:
                                         Benchmark.Benchmark_FastestCore benchmark_FastestCore = new Benchmark.Benchmark_FastestCore();
                                         benchmark_FastestCore.Run();
-                                        ; 
+                                        ;
                                         break;
                                 }
                                 break;
