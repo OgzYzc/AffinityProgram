@@ -12,6 +12,7 @@ namespace AffinityProgram
         static void Main(string[] args)
         {
             MainMenu.Run();
+
         }
     }
 }

@@ -25,25 +25,33 @@ namespace AffinityProgram.View
                 "NIC",
                 "PCI",
                 "USB",
+                "Benchmark",
             };
 
             //There may be a better way to do this but I CANNOT care anymore
+            //Submenu options for NIC
             string[] subOptions = new string[]
             {
                 "Add affinity",
                 "Show devices",
-                "Suboption 3",
+                "Benchmark",
             };
+            //Submenu options for PCI
             string[] subOptions2 = new string[]
             {
                 "Add affinity",
                 "Show devices",
                 "Suboption 2.3"
             };
+            //Submenu options for USB
             string[] subOptions3 = new string[] {
                 "Add affinity",
                 "Show devices",
                 "Suboption 3.3"
+            };
+            string[] subOptions4 = new string[]
+            {
+                "Find fastest core",
             };
 
             // Make the first option of main menu selected as default
@@ -69,6 +77,10 @@ namespace AffinityProgram.View
                 else if (previousSelectedIndex == 2)
                 {
                     displayOptions = subOptions3;
+                }
+                else if (previousSelectedIndex == 3)
+                {
+                    displayOptions = subOptions4;
                 }
 
                 // Display the menu options
@@ -188,6 +200,16 @@ namespace AffinityProgram.View
                                         break;
                                 }
                                 break;
+                            case 3:
+                                switch (selectedIndex)
+                                {
+                                    case 0:
+                                        Benchmark.Benchmark_FastestCore benchmark_FastestCore = new Benchmark.Benchmark_FastestCore();
+                                        benchmark_FastestCore.Run();
+                                        ; 
+                                        break;
+                                }
+                                break;
                             default:
                                 // This controls the main menu
                                 switch (selectedIndex)
@@ -204,6 +226,10 @@ namespace AffinityProgram.View
                                         break;
                                     case 2:
                                         // Show submenu if select Usb
+                                        previousSelectedIndex = selectedIndex;
+                                        selectedIndex = 0;
+                                        break;
+                                    case 3:
                                         previousSelectedIndex = selectedIndex;
                                         selectedIndex = 0;
                                         break;
