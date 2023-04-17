@@ -27,7 +27,7 @@ namespace AffinityProgram.Controller.Controller_Set
                     {
                         if (key != null)
                         {
-                            key.SetValue("AssignmentSetOverride", new Byte[] { 32 }, RegistryValueKind.Binary);
+                            key.SetValue("AssignmentSetOverride", new Byte[] { 16 }, RegistryValueKind.Binary);
                             key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
                             Console.WriteLine("Affinity added.");
 

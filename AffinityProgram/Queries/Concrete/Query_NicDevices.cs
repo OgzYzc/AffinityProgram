@@ -1,4 +1,4 @@
-﻿using AffinityProgram.Queries.Abstracrt;
+﻿using AffinityProgram.Queries.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;

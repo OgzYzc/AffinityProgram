@@ -12,7 +12,15 @@ namespace AffinityProgram.Model
         {
             if (!UsbDeviceID.Contains("SWD"))
             {
-                this.DeviceID = UsbDeviceID.Substring(54).Trim(new char[] { (char)34 }).Replace(@"\\", @"\") ?? throw new ArgumentNullException(nameof(UsbDeviceID));
+                if (UsbDeviceID.Contains("PCI"))
+                {
+                    this.DeviceID = UsbDeviceID.Substring(59).Trim(new char[] { (char)34 }).Replace(@"\\", @"\") ?? throw new ArgumentNullException(nameof(UsbDeviceID));
+
+                }
+                else
+                {
+                    this.DeviceID = UsbDeviceID.Substring(54).Trim(new char[] { (char)34 }).Replace(@"\\", @"\") ?? throw new ArgumentNullException(nameof(UsbDeviceID));
+                }
             }
         }
         public string DeviceID { get; }
