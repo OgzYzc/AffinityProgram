@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmark\Benchmark_FastestCore.cs" />
     <Compile Include="Controller\Concrete\Concrete_RegistryPath.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListNicDevices.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListPciDevices.cs" />
@@ -65,12 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Benchmark\Benchmark.csproj">
-      <Project>{0c28de7e-2ae5-43b4-8fc2-6aa9dcf23813}</Project>
-      <Name>Benchmark</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

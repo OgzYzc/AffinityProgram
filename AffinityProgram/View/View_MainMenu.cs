@@ -16,6 +16,9 @@ namespace AffinityProgram.View
             //Console.WindowHeight = 30;
             //Console.BufferHeight = Console.WindowHeight;
 
+            // Calculate the center of the console window
+            int centerX = Console.WindowWidth / 2;
+
             //Disable blinking cursor
             Console.CursorVisible = false;
 
@@ -61,8 +64,6 @@ namespace AffinityProgram.View
 
             while (true)
             {
-                // Calculate the center of the console window
-                int centerX = Console.WindowWidth / 2;
 
                 // Determine which options to display based on whether we're in the main menu or the submenu
                 string[] displayOptions = mainOptions;
@@ -72,13 +73,13 @@ namespace AffinityProgram.View
                     case 0:
                         displayOptions = subOptions;
                         break;
-                        case 1:
+                    case 1:
                         displayOptions = subOptions2;
                         break;
-                        case 2:
+                    case 2:
                         displayOptions = subOptions3;
                         break;
-                            case 3:
+                    case 3:
                         displayOptions = subOptions4;
                         break;
                     default:
@@ -108,7 +109,6 @@ namespace AffinityProgram.View
                     Console.SetCursorPosition(leftPadding, centerY);
                     Console.Write(displayOptions[i]);
                 }
-
                 // Wait for a key to be pressed
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
@@ -266,7 +266,6 @@ namespace AffinityProgram.View
                         break;
                 }
             }
-
         }
     }
 }
