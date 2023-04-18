@@ -4,7 +4,11 @@ using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,26 +18,34 @@ namespace AffinityProgram.Controller.Controller_Set
     {
         public Controller_SetUsbDevices()
         {
-            Concrete_RegistryPath concreteRegistryPath = new Concrete_RegistryPath();
-            string RegistryPath = concreteRegistryPath.registryPath;
-
-            var deviceInfo = new Query_UsbDevices();
-            var devices = deviceInfo.GetDevices<Model_UsbDevices>();
-            foreach (var device in devices)
+            try
             {
-                if (!String.IsNullOrEmpty(device.DeviceID))
+                var concreteRegistryPath = new Concrete_RegistryPath();
+                var registryPath = concreteRegistryPath.registryPath;
+
+                var deviceInfo = new Query_UsbDevices();
+                var devices = deviceInfo.GetDevices<Model_UsbDevices>();
+
+                var regSecurity = new RegistrySecurity();
+                regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+
+                foreach (var device in devices)
                 {
-                    using (RegistryKey key = Registry.LocalMachine.OpenSubKey(RegistryPath.Replace("$i", device.DeviceID), true))
+                    if (!string.IsNullOrEmpty(device.DeviceID))
                     {
-                        if (key != null)
+                        var keyPath = registryPath.Replace("$i", device.DeviceID);
+                        using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
                             key.SetValue("AssignmentSetOverride", new Byte[] { 16 }, RegistryValueKind.Binary);
                             key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
                             Console.WriteLine("Affinity added.");
-
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }
