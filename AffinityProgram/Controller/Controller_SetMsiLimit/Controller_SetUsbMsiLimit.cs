@@ -19,7 +19,7 @@ namespace AffinityProgram.Controller.Controller_SetMsiLimit
             try
             {
                 var concreteRegistryPath = new Concrete_RegistryPath();
-                var registryPath = concreteRegistryPath.MsiLimitRegistryPath;
+                string registryPath = concreteRegistryPath.MsiLimitRegistryPath;
 
                 var deviceInfo = new Query_UsbDevices();
                 var devices = deviceInfo.GetDevices<Model_UsbDevices>();

@@ -19,7 +19,7 @@ namespace AffinityProgram.Controller.Controller_SetInterruptPriority
             try
             {
                 var concreteRegistryPath = new Concrete_RegistryPath();
-                var registryPath = concreteRegistryPath.registryPath;
+                string registryPath = concreteRegistryPath.registryPath;
 
                 var deviceInfo = new Query_UsbDevices();
                 var devices = deviceInfo.GetDevices<Model_UsbDevices>();

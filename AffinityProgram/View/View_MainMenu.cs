@@ -2,6 +2,8 @@
 using AffinityProgram.Controller.Controller_Set;
 using AffinityProgram.Controller.Controller_SetInterruptPriority;
 using AffinityProgram.Controller.Controller_SetMsiLimit;
+using AffinityProgram.Controller.Controller_SetNicPowershell;
+using AffinityProgram.Controller.Controller_SetNicRegistry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +43,7 @@ namespace AffinityProgram.View
                 "Show devices",
                 "Set interrupt priority",
                 "Set message limit",
+                "Powershell settings",
             };
             //Submenu options for PCI
             string[] subOptions2 = new string[]
@@ -157,6 +160,12 @@ namespace AffinityProgram.View
                                     //Set msi limit
                                     case 3:
                                         Controller_SetNicMsiLimit controller_SetNicMsiLimit = new Controller_SetNicMsiLimit();
+                                        Console.ReadKey(true);
+                                        break;
+                                    //Set necessary powershell and registry attributes
+                                    case 4:
+                                        Controller_SetNicPowershell controller_SetNicPowershell = new Controller_SetNicPowershell();
+                                        Controller_SetNicRegistry controller_SetNicRegistry = new Controller_SetNicRegistry();
                                         Console.ReadKey(true);
                                         break;
                                     default:

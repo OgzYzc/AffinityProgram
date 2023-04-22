@@ -19,7 +19,7 @@ namespace AffinityProgram.Controller.Controller_Set
             try
             {
                 var concreteRegistryPath = new Concrete_RegistryPath();
-                var registryPath = concreteRegistryPath.registryPath;
+                string registryPath = concreteRegistryPath.registryPath;
 
                 var deviceInfo = new Query_PciDevices();
                 var devices = deviceInfo.GetDevices<Model_PciDevices>();

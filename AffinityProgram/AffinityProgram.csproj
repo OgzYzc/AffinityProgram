@@ -55,6 +55,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -77,6 +81,8 @@
     <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetNicMsiLimit.cs" />
     <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetPciMsiLimit.cs" />
     <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetUsbMsiLimit.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetNicPowershell.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetNicRegistry.cs" />
     <Compile Include="Model\Model_NicDevices.cs" />
     <Compile Include="Model\Model_PciDevices.cs" />
     <Compile Include="Model\Model_UsbDevices.cs" />
