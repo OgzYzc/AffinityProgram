@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace AffinityProgram.Controller.Controller_SetNicPowershell
 {
-    internal class Controller_SetNicPowershell
+    public class Controller_SetNicPowershell
     {
         public Controller_SetNicPowershell()
         {
@@ -55,7 +55,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                 }
 
                                 // Restart the current adapter
-                                Console.WriteLine($"Restarting adapter '{adapterName}'");
+                                Console.WriteLine($"Restarting adapter '{adapterName}'\nWaiting 10 seconds for the adapter to restart itself.");
                                 adapterPowershell.Commands.Clear();
                                 adapterPowershell.AddCommand("Restart-NetAdapter")
                                                 .AddParameter("Name", adapterName)
@@ -68,18 +68,16 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                 var checkResults = adapterPowershell.Invoke();
                                 if (checkResults.Count > 0)
                                 {
-                                    Console.WriteLine($"Adapter '{adapterName}' restarted successfully.");
+                                    Console.WriteLine($"Adapter '{adapterName}' restarted successfully.\nYou can go back now.");
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Failed to restart adapter '{adapterName}'.");
-                                    Console.WriteLine("Go back and try again.");
+                                    Console.WriteLine($"Failed to restart adapter '{adapterName}'.\nGo back and try again.");
                                 }
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"An error occurred while processing adapter '{adapterName}': {ex.Message}");
-                                Console.WriteLine("Go back and try again.");
+                                Console.WriteLine($"An error occurred while processing adapter '{adapterName}'\nGo back and try again.: {ex.Message}");
                             }
                         }
                     }

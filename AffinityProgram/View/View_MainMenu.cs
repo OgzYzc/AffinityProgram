@@ -163,8 +163,7 @@ namespace AffinityProgram.View
                                         Console.ReadKey(true);
                                         break;
                                     //Set necessary powershell and registry attributes
-                                    case 4:
-                                        Controller_SetNicPowershell controller_SetNicPowershell = new Controller_SetNicPowershell();
+                                    case 4:                                        
                                         Controller_SetNicRegistry controller_SetNicRegistry = new Controller_SetNicRegistry();
                                         Console.ReadKey(true);
                                         break;

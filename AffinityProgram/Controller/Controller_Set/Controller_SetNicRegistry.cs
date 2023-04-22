@@ -1,8 +1,10 @@
 ﻿using AffinityProgram.Controller.Concrete;
+using AffinityProgram.Controller.Controller_SetNicPowershell;
 using Microsoft.Win32;
 using System;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Threading;
 
 namespace AffinityProgram.Controller.Controller_SetNicRegistry
 {
@@ -22,8 +24,14 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 using (var key = Registry.LocalMachine.CreateSubKey(registryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                 {
                     key.SetValue("RssBaseCpu", "2", RegistryValueKind.DWord);
-                    Console.WriteLine("Registry key added successfully");
+                    Console.WriteLine("Registry key added successfully.");
+                    
                 }
+                Console.WriteLine("Executing powershell.");
+                Thread.Sleep(3000);
+                Console.Clear();
+                //I don't know why, I don't know how but here we are.
+                Controller.Controller_SetNicPowershell.Controller_SetNicPowershell controller_SetNicPowershell = new Controller_SetNicPowershell.Controller_SetNicPowershell();
             }
             catch (Exception ex)
             {
@@ -32,4 +40,5 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         }
     }
+    
 }
