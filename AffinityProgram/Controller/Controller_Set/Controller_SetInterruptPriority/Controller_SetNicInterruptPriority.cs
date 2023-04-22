@@ -1,5 +1,4 @@
-﻿using AffinityProgram.Controller.Concrete;
-using AffinityProgram.Model;
+﻿using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
@@ -10,19 +9,18 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AffinityProgram.Controller.Controller_Set
+namespace AffinityProgram.Controller.Controller_SetInterruptPriority
 {
-    internal class Controller_SetPciAffinity
+    internal class Controller_SetNicInterruptPriority
     {
-        public Controller_SetPciAffinity()
+        public Controller_SetNicInterruptPriority()
         {
             try
             {
-                var concreteRegistryPath = new Concrete_RegistryPath();
-                string registryPath = concreteRegistryPath.registryPath;
+                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
-                var deviceInfo = new Query_PciDevices();
-                var devices = deviceInfo.GetDevices<Model_PciDevices>();
+                var deviceInfo = new Query_NicDevices();
+                var devices = deviceInfo.GetDevices<Model_NicDevices>();
 
                 var regSecurity = new RegistrySecurity();
                 regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
@@ -31,12 +29,12 @@ namespace AffinityProgram.Controller.Controller_Set
                 {
                     if (!string.IsNullOrEmpty(device.DeviceID))
                     {
-                        var keyPath = registryPath.Replace("$i", device.DeviceID);
+                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                            key.SetValue("AssignmentSetOverride", new Byte[] { 02 }, RegistryValueKind.Binary);
-                            key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
-                            Console.WriteLine("Affinity added.");
+                            //Priority Normal
+                            key.SetValue("DevicePriority", "2", RegistryValueKind.DWord);
+                            Console.WriteLine("Priority added.");
                         }
                     }
                 }

@@ -1,5 +1,4 @@
-﻿using AffinityProgram.Controller.Concrete;
-using AffinityProgram.Model;
+﻿using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using System;
 using System.Collections.Generic;
@@ -13,9 +12,6 @@ namespace AffinityProgram.Controller.Controller_List
     {
         public Controller_ListPciDevices()
         {
-            Concrete_RegistryPath _RegistryPath = new Concrete_RegistryPath();
-            string _Name = _RegistryPath.registryPath;
-
             var deviceInfo = new Query_PciDevices();
             var devices = deviceInfo.GetDevices<Model_PciDevices>();
             foreach (var device in devices)

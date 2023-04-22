@@ -1,5 +1,4 @@
-﻿using AffinityProgram.Controller.Concrete;
-using AffinityProgram.Model;
+﻿using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
@@ -20,8 +19,7 @@ namespace AffinityProgram.Controller.Controller_Set
         {
             try
             {
-                var concreteRegistryPath = new Concrete_RegistryPath();
-                string registryPath = concreteRegistryPath.registryPath;
+                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
                 var deviceInfo = new Query_UsbDevices();
                 var devices = deviceInfo.GetDevices<Model_UsbDevices>();
@@ -33,7 +31,7 @@ namespace AffinityProgram.Controller.Controller_Set
                 {
                     if (!string.IsNullOrEmpty(device.DeviceID))
                     {
-                        var keyPath = registryPath.Replace("$i", device.DeviceID);
+                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
                             key.SetValue("AssignmentSetOverride", new Byte[] { 32 }, RegistryValueKind.Binary);

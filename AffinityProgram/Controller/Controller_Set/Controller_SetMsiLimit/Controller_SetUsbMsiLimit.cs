@@ -1,5 +1,4 @@
-﻿using AffinityProgram.Controller.Concrete;
-using AffinityProgram.Model;
+﻿using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
@@ -10,16 +9,15 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AffinityProgram.Controller.Controller_SetInterruptPriority
+namespace AffinityProgram.Controller.Controller_SetMsiLimit
 {
-    internal class Controller_SetUsbInterruptPriority
+    internal class Controller_SetUsbMsiLimit
     {
-        public Controller_SetUsbInterruptPriority()
+        public Controller_SetUsbMsiLimit()
         {
             try
             {
-                var concreteRegistryPath = new Concrete_RegistryPath();
-                string registryPath = concreteRegistryPath.registryPath;
+                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties");
 
                 var deviceInfo = new Query_UsbDevices();
                 var devices = deviceInfo.GetDevices<Model_UsbDevices>();
@@ -31,24 +29,23 @@ namespace AffinityProgram.Controller.Controller_SetInterruptPriority
                 {
                     if (!string.IsNullOrEmpty(device.DeviceID))
                     {
+                        //Using if-else because don't want to add msi limit to every usb port but controllers.
                         if (device.DeviceID.Contains(@"PCI\VEN_1022&DEV_149C"))
                         {
-                            var keyPath = registryPath.Replace("$i", device.DeviceID);
+                            var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                             using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
-                            {
-                                //Priority Low
-                                key.SetValue("DevicePriority", "1", RegistryValueKind.DWord);
-                                Console.WriteLine("Priority added.");
+                            {                                
+                                key.SetValue("MessageNumberLimit", "8", RegistryValueKind.DWord);
+                                Console.WriteLine("Message limit added.");
                             }
                         }
                         else if (device.DeviceID.Contains(@"PCI\VEN_1022&DEV_43EE"))
                         {
-                            var keyPath = registryPath.Replace("$i", device.DeviceID);
+                            var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                             using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
-                            {
-                                //Priority Normal
-                                key.SetValue("DevicePriority", "2", RegistryValueKind.DWord);
-                                Console.WriteLine("Priority added.");
+                            {                                
+                                key.SetValue("MessageNumberLimit", "8", RegistryValueKind.DWord);
+                                Console.WriteLine("Message limit added.");
                             }
                         }
                     }

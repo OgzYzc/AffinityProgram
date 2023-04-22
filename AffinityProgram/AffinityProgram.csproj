@@ -68,23 +68,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmark\Benchmark_FastestCore.cs" />
-    <Compile Include="Controller\Concrete\Concrete_RegistryPath.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListNicDevices.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListPciDevices.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListUsbDevices.cs" />
-    <Compile Include="Controller\Controller_SetAffinity\Controller_SetNicAffinity.cs" />
-    <Compile Include="Controller\Controller_SetAffinity\Controller_SetPciAffinity.cs" />
-    <Compile Include="Controller\Controller_SetAffinity\Controller_SetUsbAffinity.cs" />
-    <Compile Include="Controller\Controller_SetInterruptPriority\Controller_SetNicInterruptPriority.cs" />
-    <Compile Include="Controller\Controller_SetInterruptPriority\Controller_SetPciInterruptPriority.cs" />
-    <Compile Include="Controller\Controller_SetInterruptPriority\Controller_SetUsbInterruptPriority.cs" />
-    <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetNicMsiLimit.cs" />
-    <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetPciMsiLimit.cs" />
-    <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetUsbMsiLimit.cs" />
-    <Compile Include="Controller\Controller_Set\Controller_SetNicPowershell.cs" />
-    <Compile Include="Controller\Controller_Set\Controller_SetNicRegistry.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetAffinity\Controller_SetNicAffinity.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetAffinity\Controller_SetPciAffinity.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetAffinity\Controller_SetUsbAffinity.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetInterruptPriority\Controller_SetNicInterruptPriority.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetInterruptPriority\Controller_SetPciInterruptPriority.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetInterruptPriority\Controller_SetUsbInterruptPriority.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetMsiLimit\Controller_SetNicMsiLimit.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetMsiLimit\Controller_SetPciMsiLimit.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetMsiLimit\Controller_SetUsbMsiLimit.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetNicEntries\Controller_SetNicPowershell.cs" />
+    <Compile Include="Controller\Controller_Set\Controller_SetNicEntries\Controller_SetNicRegistry.cs" />
     <Compile Include="Model\Model_NicDevices.cs" />
     <Compile Include="Model\Model_PciDevices.cs" />
+    <Compile Include="Model\Model_RegistryPath.cs" />
     <Compile Include="Model\Model_UsbDevices.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

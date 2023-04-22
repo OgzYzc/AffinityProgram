@@ -1,5 +1,4 @@
-﻿using AffinityProgram.Controller.Concrete;
-using AffinityProgram.Model;
+﻿using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
@@ -12,17 +11,16 @@ using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_SetMsiLimit
 {
-    internal class Controller_SetNicMsiLimit
+    internal class Controller_SetPciMsiLimit
     {
-        public Controller_SetNicMsiLimit()
+        public Controller_SetPciMsiLimit()
         {
-			try
-			{
-                var concreteRegistryPath = new Concrete_RegistryPath();
-                string registryPath = concreteRegistryPath.MsiLimitRegistryPath;
+            try
+            {
+                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties");
 
-                var deviceInfo = new Query_NicDevices();
-                var devices = deviceInfo.GetDevices<Model_NicDevices>();
+                var deviceInfo = new Query_PciDevices();
+                var devices = deviceInfo.GetDevices<Model_PciDevices>();
 
                 var regSecurity = new RegistrySecurity();
                 regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
@@ -31,17 +29,17 @@ namespace AffinityProgram.Controller.Controller_SetMsiLimit
                 {
                     if (!string.IsNullOrEmpty(device.DeviceID))
                     {
-                        var keyPath = registryPath.Replace("$i", device.DeviceID);
+                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                            key.SetValue("MessageNumberLimit", "5", RegistryValueKind.DWord);
+                            key.SetValue("MessageNumberLimit", "1", RegistryValueKind.DWord);
                             Console.WriteLine("Message limit added.");
                         }
                     }
                 }
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
             }
         }

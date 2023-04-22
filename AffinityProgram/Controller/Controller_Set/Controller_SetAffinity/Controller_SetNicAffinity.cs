@@ -1,5 +1,4 @@
-﻿using AffinityProgram.Controller.Concrete;
-using AffinityProgram.Model;
+﻿using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
@@ -10,19 +9,18 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AffinityProgram.Controller.Controller_SetInterruptPriority
+namespace AffinityProgram.Controller.Controller_Set
 {
-    internal class Controller_SetPciInterruptPriority
+    internal class Controller_SetNicAffinity
     {
-        public Controller_SetPciInterruptPriority()
+        public Controller_SetNicAffinity()
         {
             try
             {
-                var concreteRegistryPath = new Concrete_RegistryPath();
-                string registryPath = concreteRegistryPath.registryPath;
+                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");                
 
-                var deviceInfo = new Query_PciDevices();
-                var devices = deviceInfo.GetDevices<Model_PciDevices>();
+                var deviceInfo = new Query_NicDevices();
+                var devices = deviceInfo.GetDevices<Model_NicDevices>();
 
                 var regSecurity = new RegistrySecurity();
                 regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
@@ -31,12 +29,12 @@ namespace AffinityProgram.Controller.Controller_SetInterruptPriority
                 {
                     if (!string.IsNullOrEmpty(device.DeviceID))
                     {
-                        var keyPath = registryPath.Replace("$i", device.DeviceID);
+                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
+                        Console.WriteLine(keyPath);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                            //Priority High
-                            key.SetValue("DevicePriority", "3", RegistryValueKind.DWord);
-                            Console.WriteLine("Priority added.");
+                            key.SetValue("DevicePolicy", "5", RegistryValueKind.DWord);
+                            Console.WriteLine("Affinity added.");
                         }
                     }
                 }
