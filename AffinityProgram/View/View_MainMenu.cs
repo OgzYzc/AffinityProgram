@@ -1,5 +1,7 @@
 ﻿using AffinityProgram.Controller.Controller_List;
 using AffinityProgram.Controller.Controller_Set;
+using AffinityProgram.Controller.Controller_SetInterruptPriority;
+using AffinityProgram.Controller.Controller_SetMsiLimit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,25 +35,27 @@ namespace AffinityProgram.View
 
             //There may be a better way to do this but I CANNOT care anymore
             //Submenu options for NIC
-            //I don't know what to do with third options but I keep them in any case
             string[] subOptions = new string[]
             {
                 "Add affinity",
                 "Show devices",
-                "Suboption 1.3",
+                "Set interrupt priority",
+                "Set message limit",
             };
             //Submenu options for PCI
             string[] subOptions2 = new string[]
             {
                 "Add affinity",
                 "Show devices",
-                "Suboption 2.3"
+                "Set interrupt priority",
+                "Set message limit",
             };
             //Submenu options for USB
             string[] subOptions3 = new string[] {
                 "Add affinity",
                 "Show devices",
-                "Suboption 3.3"
+                "Set interrupt priority",
+                "Set message limit",
             };
             string[] subOptions4 = new string[]
             {
@@ -137,7 +141,7 @@ namespace AffinityProgram.View
                                 {
                                     //Add Nic device affinity
                                     case 0:
-                                        Controller_SetNicDevices controller_SetNicDevices = new Controller_SetNicDevices();
+                                        Controller_SetNicAffinity controller_SetNicDevices = new Controller_SetNicAffinity();
                                         Console.ReadKey(true);
                                         break;
                                     //List Nic devices
@@ -145,8 +149,14 @@ namespace AffinityProgram.View
                                         Controller_ListNicDevices controller_ListNicDevices = new Controller_ListNicDevices();
                                         Console.ReadKey(true);
                                         break;
+                                    //Set interrupt priority
                                     case 2:
-                                        Console.WriteLine("You selected suboption 3 for submenu option 1");
+                                        Controller_SetNicInterruptPriority controller_SetNicInterruptPriority = new Controller_SetNicInterruptPriority();
+                                        Console.ReadKey(true);
+                                        break;
+                                    //Set msi limit
+                                    case 3:
+                                        Controller_SetNicMsiLimit controller_SetNicMsiLimit = new Controller_SetNicMsiLimit();
                                         Console.ReadKey(true);
                                         break;
                                     default:
@@ -159,18 +169,22 @@ namespace AffinityProgram.View
                                 {
                                     // Add Pci device affinity
                                     case 0:
-
-                                        Controller_SetPciDevices controller_SetPciDevices = new Controller_SetPciDevices();
+                                        Controller_SetPciAffinity controller_SetPciDevices = new Controller_SetPciAffinity();
                                         Console.ReadKey(true);
                                         break;
                                     // List Pci devices
                                     case 1:
-
                                         Controller_ListPciDevices controller_ListPciDevices = new Controller_ListPciDevices();
                                         Console.ReadKey(true);
                                         break;
+                                    //Set interrupt priority
                                     case 2:
-                                        Console.WriteLine("You selected suboption 3 for submenu option 2");
+                                        Controller_SetPciInterruptPriority controller_SetPciInterruptPriority = new Controller_SetPciInterruptPriority();
+                                        Console.ReadKey(true);
+                                        break;
+                                    //Set msi limit
+                                    case 3:
+                                        Controller_SetPciMsiLimit controller_SetPciMsiLimit = new Controller_SetPciMsiLimit();
                                         Console.ReadKey(true);
                                         break;
                                     default:
@@ -183,19 +197,22 @@ namespace AffinityProgram.View
                                 {
                                     // Add Usb device affinity
                                     case 0:
-
-                                        Controller_SetUsbDevices controller_SetUsbDevices = new Controller_SetUsbDevices();
+                                        Controller_SetUsbAffinity controller_SetUsbDevices = new Controller_SetUsbAffinity();
                                         Console.ReadKey(true);
                                         break;
                                     // List Usb devices
                                     case 1:
                                         Controller_ListUsbDevices controller_ListUsbDevices = new Controller_ListUsbDevices();
-
                                         Console.ReadKey(true);
                                         break;
+                                    //Set interrupt priority
                                     case 2:
-                                        // Suboption 3
-                                        Console.WriteLine("You selected suboption 3 for submenu option 3");
+                                        Controller_SetUsbInterruptPriority controller_SetUsbInterruptPriority = new Controller_SetUsbInterruptPriority();
+                                        Console.ReadKey(true);
+                                        break;
+                                    //Set msi limit
+                                    case 3:
+                                        Controller_SetUsbMsiLimit controller_SetUsbMsiLimit = new Controller_SetUsbMsiLimit();
                                         Console.ReadKey(true);
                                         break;
                                     default:
@@ -216,27 +233,28 @@ namespace AffinityProgram.View
                                 // This controls the main menu
                                 switch (selectedIndex)
                                 {
-                                    case 0:
-                                        // Show submenu if select Nic
+                                    // Show submenu if select Nic
+                                    case 0:                                        
                                         previousSelectedIndex = selectedIndex;
                                         selectedIndex = 0;
                                         break;
-                                    case 1:
-                                        // Show submenu if select Pci
+                                    // Show submenu if select Pci
+                                    case 1:                                        
                                         previousSelectedIndex = selectedIndex;
                                         selectedIndex = 0;
                                         break;
-                                    case 2:
-                                        // Show submenu if select Usb
+                                    // Show submenu if select Usb
+                                    case 2:                                      
                                         previousSelectedIndex = selectedIndex;
                                         selectedIndex = 0;
                                         break;
+                                    //Benchmark
                                     case 3:
                                         previousSelectedIndex = selectedIndex;
                                         selectedIndex = 0;
                                         break;
-                                    default:
-                                        // Handle other options
+                                    // Handle other options
+                                    default:                                        
                                         Console.WriteLine("You selected: " + displayOptions[selectedIndex]);
                                         Console.ReadKey(true);
                                         previousSelectedIndex = selectedIndex;

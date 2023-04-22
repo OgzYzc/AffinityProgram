@@ -68,9 +68,15 @@
     <Compile Include="Controller\Controller_List\Controller_ListNicDevices.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListPciDevices.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListUsbDevices.cs" />
-    <Compile Include="Controller\Controller_Set\Controller_SetNicDevices.cs" />
-    <Compile Include="Controller\Controller_Set\Controller_SetPciDevices.cs" />
-    <Compile Include="Controller\Controller_Set\Controller_SetUsbDevices.cs" />
+    <Compile Include="Controller\Controller_SetAffinity\Controller_SetNicAffinity.cs" />
+    <Compile Include="Controller\Controller_SetAffinity\Controller_SetPciAffinity.cs" />
+    <Compile Include="Controller\Controller_SetAffinity\Controller_SetUsbAffinity.cs" />
+    <Compile Include="Controller\Controller_SetInterruptPriority\Controller_SetNicInterruptPriority.cs" />
+    <Compile Include="Controller\Controller_SetInterruptPriority\Controller_SetPciInterruptPriority.cs" />
+    <Compile Include="Controller\Controller_SetInterruptPriority\Controller_SetUsbInterruptPriority.cs" />
+    <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetNicMsiLimit.cs" />
+    <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetPciMsiLimit.cs" />
+    <Compile Include="Controller\Controller_SetMsiLimit\Controller_SetUsbMsiLimit.cs" />
     <Compile Include="Model\Model_NicDevices.cs" />
     <Compile Include="Model\Model_PciDevices.cs" />
     <Compile Include="Model\Model_UsbDevices.cs" />
@@ -98,5 +104,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

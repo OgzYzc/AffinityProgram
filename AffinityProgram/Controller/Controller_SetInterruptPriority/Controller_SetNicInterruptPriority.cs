@@ -4,27 +4,25 @@ using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AffinityProgram.Controller.Controller_Set
+namespace AffinityProgram.Controller.Controller_SetInterruptPriority
 {
-    internal class Controller_SetUsbDevices
+    internal class Controller_SetNicInterruptPriority
     {
-        public Controller_SetUsbDevices()
+        public Controller_SetNicInterruptPriority()
         {
             try
             {
                 var concreteRegistryPath = new Concrete_RegistryPath();
                 var registryPath = concreteRegistryPath.registryPath;
 
-                var deviceInfo = new Query_UsbDevices();
-                var devices = deviceInfo.GetDevices<Model_UsbDevices>();
+                var deviceInfo = new Query_NicDevices();
+                var devices = deviceInfo.GetDevices<Model_NicDevices>();
 
                 var regSecurity = new RegistrySecurity();
                 regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
@@ -36,9 +34,9 @@ namespace AffinityProgram.Controller.Controller_Set
                         var keyPath = registryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                            key.SetValue("AssignmentSetOverride", new Byte[] { 16 }, RegistryValueKind.Binary);
-                            key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
-                            Console.WriteLine("Affinity added.");
+                            //Priority Normal
+                            key.SetValue("DevicePriority", "2", RegistryValueKind.DWord);
+                            Console.WriteLine("Priority added.");
                         }
                     }
                 }

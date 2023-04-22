@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_Set
 {
-    internal class Controller_SetNicDevices
+    internal class Controller_SetPciAffinity
     {
-        public Controller_SetNicDevices()
+        public Controller_SetPciAffinity()
         {
             try
             {
                 var concreteRegistryPath = new Concrete_RegistryPath();
                 var registryPath = concreteRegistryPath.registryPath;
 
-                var deviceInfo = new Query_NicDevices();
-                var devices = deviceInfo.GetDevices<Model_NicDevices>();
+                var deviceInfo = new Query_PciDevices();
+                var devices = deviceInfo.GetDevices<Model_PciDevices>();
 
                 var regSecurity = new RegistrySecurity();
                 regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
@@ -34,7 +34,8 @@ namespace AffinityProgram.Controller.Controller_Set
                         var keyPath = registryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                            key.SetValue("DevicePolicy", "5", RegistryValueKind.DWord);
+                            key.SetValue("AssignmentSetOverride", new Byte[] { 02 }, RegistryValueKind.Binary);
+                            key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
                             Console.WriteLine("Affinity added.");
                         }
                     }

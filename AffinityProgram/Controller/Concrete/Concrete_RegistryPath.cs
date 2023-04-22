@@ -10,6 +10,7 @@ namespace AffinityProgram.Controller.Concrete
     {
         public Concrete_RegistryPath() { }
         public string registryPath = @"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy";
+        public string MsiLimitRegistryPath = @"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties";
 
     }
 }
