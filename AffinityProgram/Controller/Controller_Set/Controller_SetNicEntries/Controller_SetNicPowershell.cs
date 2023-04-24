@@ -30,15 +30,15 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                 // Bind the base processor to CPU2 (Core 3) for RSS
                                 Console.WriteLine($"Binding the base processor to 2 for RSS on '{adapterName}'.");
                                 adapterPowershell.AddCommand("Set-NetAdapterRss")
-                                                .AddParameter("Name", adapterName)
-                                                .AddParameter("BaseProcessorNumber", 2)
-                                                .Invoke();
+                                                 .AddParameter("Name", adapterName)
+                                                 .AddParameter("BaseProcessorNumber", 2)
+                                                 .Invoke();
 
                                 // Verify the base processor for RSS
                                 Console.WriteLine($"Verifying the base processor for RSS on '{adapterName}'.");
                                 adapterPowershell.Commands.Clear();
                                 adapterPowershell.AddCommand("Get-NetAdapterRss")
-                                                .AddParameter("Name", adapterName);
+                                                 .AddParameter("Name", adapterName);
                                 var results = adapterPowershell.Invoke();
                                 if (results.Count > 0)
                                 {
@@ -58,8 +58,8 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                 Console.WriteLine($"Restarting adapter '{adapterName}'\nWaiting 10 seconds for the adapter to restart itself.");
                                 adapterPowershell.Commands.Clear();
                                 adapterPowershell.AddCommand("Restart-NetAdapter")
-                                                .AddParameter("Name", adapterName)
-                                                .Invoke();
+                                                 .AddParameter("Name", adapterName)
+                                                 .Invoke();
                                 Thread.Sleep(10000);
 
                                 // Check the adapter running or not

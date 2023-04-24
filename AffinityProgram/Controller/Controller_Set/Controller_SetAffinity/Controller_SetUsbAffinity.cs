@@ -34,7 +34,7 @@ namespace AffinityProgram.Controller.Controller_Set
                         var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                            key.SetValue("AssignmentSetOverride", new Byte[] { 32 }, RegistryValueKind.Binary);
+                            key.SetValue("AssignmentSetOverride", new Byte[] { 16 }, RegistryValueKind.Binary);
                             key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
                             Console.WriteLine("Affinity added.");
                         }

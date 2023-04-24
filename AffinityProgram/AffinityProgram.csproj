@@ -91,6 +91,7 @@
     <Compile Include="Queries\Concrete\Query_NicDevices.cs" />
     <Compile Include="Queries\Concrete\Query_PciDevices.cs" />
     <Compile Include="Queries\Concrete\Query_UsbDevices.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="View\View_MainMenu.cs" />
   </ItemGroup>
   <ItemGroup>

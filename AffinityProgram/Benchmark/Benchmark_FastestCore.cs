@@ -17,7 +17,6 @@ namespace AffinityProgram.Benchmark
         {
             Console.WriteLine("Welcome to the Core Benchmark program!. If you have SMT or Hyper-threading ON, remember that you need to turn them OFF before using this.");
 
-            // Prompt user to start the benchmark
             Console.WriteLine("Press any key to start the benchmark...");
             Console.ReadKey();
 
