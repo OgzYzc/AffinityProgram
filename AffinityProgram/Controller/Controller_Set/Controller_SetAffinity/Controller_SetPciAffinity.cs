@@ -32,7 +32,15 @@ namespace AffinityProgram.Controller.Controller_Set
                         var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                            key.SetValue("AssignmentSetOverride", new Byte[] { 02 }, RegistryValueKind.Binary);
+                            //I can write this in single line but this is better for readibility for me
+                            if (View.MainMenu.isSmtEnabled)
+                            {
+                                key.SetValue("AssignmentSetOverride", new Byte[] { 04 }, RegistryValueKind.Binary);
+                            }
+                            else
+                            {
+                                key.SetValue("AssignmentSetOverride", new Byte[] { 02 }, RegistryValueKind.Binary);
+                            }
                             key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
                             Console.WriteLine("Affinity added.");
                         }

@@ -30,7 +30,7 @@ namespace AffinityProgram.Benchmark
 
             Console.WriteLine($"This system has {coreCount} physical cores.");
 
-            // Define a complex mathematical operation (not really its just a simple square root and log)
+            // Defining benchmark
             const int numIterations = 100000000;
             Func<double, double, double> mathOperation = (x, y) =>
             {
