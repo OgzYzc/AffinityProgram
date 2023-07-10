@@ -8,10 +8,16 @@ namespace AffinityProgram.Model
 {
     internal class Model_PciDevices
     {
-        public Model_PciDevices(string PciDeviceID)
+        public Model_PciDevices(string PciDeviceID = null)
         {
-            this.DeviceID = PciDeviceID ?? throw new ArgumentNullException(nameof(PciDeviceID));
+            this.DeviceID = PciDeviceID;            
+        }
+        public Model_PciDevices(byte[] GPUArray = null)
+        {
+            this.coreGPUArray = GPUArray;
         }
         public string DeviceID { get; }
+
+        public byte[] coreGPUArray { get; set; }
     }
 }

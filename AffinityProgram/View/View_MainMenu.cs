@@ -1,9 +1,11 @@
-﻿using AffinityProgram.Controller.Controller_List;
+﻿using AffinityProgram.Benchmark;
+using AffinityProgram.Controller.Controller_List;
 using AffinityProgram.Controller.Controller_Set;
 using AffinityProgram.Controller.Controller_SetInterruptPriority;
 using AffinityProgram.Controller.Controller_SetMsiLimit;
 using AffinityProgram.Controller.Controller_SetNicPowershell;
 using AffinityProgram.Controller.Controller_SetNicRegistry;
+using AffinityProgram.Find_Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +38,7 @@ namespace AffinityProgram.View
                 "NIC",
                 "PCI",
                 "USB",
-                "Benchmark",
+                "Find best core",
             };
 
             //There may be a better way to do this but I CANNOT care anymore
@@ -66,7 +68,8 @@ namespace AffinityProgram.View
             };
             string[] subOptions4 = new string[]
             {
-                "Find fastest core",
+                "Find preffered core order (CPPC)",
+                "Benchmark",
             };
             
             // Make the first option of main menu selected as default
@@ -237,9 +240,13 @@ namespace AffinityProgram.View
                                 switch (selectedIndex)
                                 {
                                     case 0:
-                                        Benchmark.Benchmark_FastestCore benchmark_FastestCore = new Benchmark.Benchmark_FastestCore();
-                                        benchmark_FastestCore.Run();
-                                        ;
+                                        
+                                        Find_Core_CPPC find_Core_CPPC = new Find_Core_CPPC();
+                                        find_Core_CPPC.Run();
+                                        break;
+                                    case 1:
+                                        Find_Core_Benchmark find_Core_Benchmark = new Find_Core_Benchmark();
+                                        find_Core_Benchmark.Run();
                                         break;
                                 }
                                 break;
@@ -301,23 +308,23 @@ namespace AffinityProgram.View
                 }
             }
         }
-
+        public static int physicalCoreCount = 0;
+        public static int logicalCoreCount = 0;
         public static void CheckCPU()
-        {
-            int physicalCoreCount = 0;
+        {            
             //Physical core count
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
             {
-                physicalCoreCount += int.Parse(item["NumberOfCores"].ToString());
+                physicalCoreCount = int.Parse(item["NumberOfCores"].ToString());
             }
 
             Console.Write($"P:{physicalCoreCount} ", Console.ForegroundColor = ConsoleColor.Green);
 
-            int logicalCoreCount = 0;
+            
             //Thread count
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_Processor").Get())
             {
-                logicalCoreCount += int.Parse(item["NumberOfLogicalProcessors"].ToString());
+                logicalCoreCount = int.Parse(item["NumberOfLogicalProcessors"].ToString());
             }
 
             Console.Write($"L:{logicalCoreCount} |");

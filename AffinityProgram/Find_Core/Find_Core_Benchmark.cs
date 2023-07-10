@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace AffinityProgram.Benchmark
 {
-    internal class Benchmark_FastestCore
+    internal class Find_Core_Benchmark
     {
-        public Benchmark_FastestCore()
+        public Find_Core_Benchmark()
         {
 
         }
         public void Run()
         {
-            Console.WriteLine("Welcome to the Core Benchmark program!. If you have SMT or Hyper-threading ON, remember that you need to turn them OFF before using this.");
+            Console.WriteLine("Welcome to the Core Benchmark program!.");
 
             Console.WriteLine("Press any key to start the benchmark...");
             Console.ReadKey();
