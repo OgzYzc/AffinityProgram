@@ -30,7 +30,6 @@ namespace AffinityProgram.Controller.Controller_Set
                     if (!string.IsNullOrEmpty(device.DeviceID))
                     {
                         var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
-                        Console.WriteLine(keyPath);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
                             key.SetValue("DevicePolicy", "5", RegistryValueKind.DWord);

@@ -1,7 +1,9 @@
 ﻿using AffinityProgram.Controller.Controller_SetNicPowershell;
+using AffinityProgram.Find_Core;
 using AffinityProgram.Model;
 using Microsoft.Win32;
 using System;
+using System.Management.Automation;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
@@ -12,6 +14,8 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
     {
         public Controller_SetNicRegistry()
         {
+            bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
+
             try
             {
                 //Adding RssBaseCpu to Ndis service
@@ -22,21 +26,47 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
                 using (var key = Registry.LocalMachine.CreateSubKey(registryPath.RegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                 {
-                    key.SetValue("RssBaseCpu", "2", RegistryValueKind.DWord);
-                    Console.WriteLine("Registry key added successfully.\nExecuting powershell.");                    
+
+                    if (Find_Core_CPPC.selectedCoreNIC == null)
+                    {
+                        Console.WriteLine("You are adding affinity without using CPPC. " +
+                            "If you enabled CPPC go back to menu and press 'Find best core' then come back." +
+                            "Or you can add predetermined affinity. Press Enter for adding Predetermined affinity.");
+
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                        if (keyInfo.Key == ConsoleKey.Enter)
+                        {
+                            if (View.MainMenu.isSmtEnabled)
+                            {
+                                key.SetValue("RssBaseCpu", "4", RegistryValueKind.DWord);
+                            }
+                            else
+                            {
+                                key.SetValue("RssBaseCpu", "2", RegistryValueKind.DWord);
+                            }
+                        }
+                        else
+                            return;
+                    }
+                    else
+                    {
+                        var selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
+                        key.SetValue("RssBaseCpu", selectedCore, RegistryValueKind.DWord);
+                    }
+
+                    //Use max 2 core on either choice
+                    key.SetValue("MaxNumRssCpus", "2", RegistryValueKind.DWord);
+                    Console.WriteLine("Registry key added successfully.\nExecuting powershell.");
                 }
                 //Waiting 3 seconds for dramatic effect
                 Thread.Sleep(3000);
-                Console.Clear();
-                //I don't care.
-                Controller.Controller_SetNicPowershell.Controller_SetNicPowershell controller_SetNicPowershell = new Controller_SetNicPowershell.Controller_SetNicPowershell();
+
+                Controller_SetNicPowershell.Controller_SetNicPowershell.Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
         }
     }
-    
 }

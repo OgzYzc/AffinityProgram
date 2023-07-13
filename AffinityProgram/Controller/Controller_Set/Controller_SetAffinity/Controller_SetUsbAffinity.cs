@@ -53,7 +53,7 @@ namespace AffinityProgram.Controller.Controller_Set
                                 }
                                 else
                                 {
-                                    break;
+                                    return;
                                 }
                             }
                             else

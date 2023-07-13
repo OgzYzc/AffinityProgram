@@ -51,6 +51,8 @@ namespace AffinityProgram.Controller.Controller_Set
                                         Console.WriteLine("Affinity added.");
                                     }
                                 }
+                                else
+                                    return;
                             }
                             else
                             {

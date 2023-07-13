@@ -16,7 +16,9 @@ namespace AffinityProgram.Find_Core
         public static byte[] GPUhexBytes;
         public static byte[] USBhexBytes;
         static int processorCount;
+        static bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
 
+        public static int[] selectedCoreNIC;
         public void Run()
         {
             Console.WriteLine("This program uses event viewer to find out preffered core tags. You need to enable CPPC and CPPC preffered cores in bios");
@@ -25,11 +27,8 @@ namespace AffinityProgram.Find_Core
             Console.ReadLine();
 
 
-            
-
             using (EventLog eventLog = new EventLog("System"))
             {
-
                 List<string> outputList = new List<string>();
                 List<(int maxPerformance, string processorNumber)> maxPerformanceProcessorList = new List<(int, string)>();
 
@@ -48,7 +47,7 @@ namespace AffinityProgram.Find_Core
                         maxPerformanceProcessorList.Add((maxPerformanceValue, processorNumber));
 
                         //Loop core count
-                        if (View.MainMenu.isSmtEnabled)
+                        if (IsSmtEnabled)
                             processorCount = View.MainMenu.logicalCoreCount;
                         else
                             processorCount = View.MainMenu.physicalCoreCount;
@@ -58,6 +57,7 @@ namespace AffinityProgram.Find_Core
                     }
                 }
 
+
                 maxPerformanceProcessorList.Sort((x, y) => y.maxPerformance.CompareTo(x.maxPerformance));
 
                 foreach (string output in outputList)
@@ -66,7 +66,7 @@ namespace AffinityProgram.Find_Core
                 }
 
                 if (maxPerformanceProcessorList.Count < 1)
-                    Console.WriteLine("\n" + "Error!");
+                    Console.WriteLine("\n" + "Error reading Event Viewer. Make sure you didn't disabled needed services and do not use any kind of Log Clearer script.");
                 else
                 {
                     Console.WriteLine("\n" + "Windows determined processor order:");
@@ -101,10 +101,22 @@ namespace AffinityProgram.Find_Core
                     }
                 }
 
-                var coreList = new int[tempCoreList.Length / 2];
-                for (int i = 0; i < tempCoreList.Length; i += 2)
+                int[] coreList;
+                if (IsSmtEnabled)
                 {
-                    coreList[i / 2] = tempCoreList[i];
+                    coreList = new int[tempCoreList.Length / 2];
+                    for (int i = 0; i < tempCoreList.Length; i += 2)
+                    {
+                        coreList[i / 2] = tempCoreList[i];
+                    }
+                }
+                else
+                {
+                    coreList = new int[tempCoreList.Length];
+                    for (int i = 0; i < tempCoreList.Length; i++)
+                    {
+                        coreList[i] = tempCoreList[i];
+                    }
                 }
 
 
@@ -113,9 +125,10 @@ namespace AffinityProgram.Find_Core
 
                 List<int> selectCoreGPU = new List<int>();
                 List<int> selectCoreUSB = new List<int>();
+                List<int> selectCoreNIC = new List<int>();
 
                 //Check if smt is true
-                switch (View.MainMenu.isSmtEnabled)
+                switch (IsSmtEnabled)
                 {
                     case true:
 
@@ -144,8 +157,14 @@ namespace AffinityProgram.Find_Core
 
                             if (selectCoreUSB.Count == 0)
                             {
-                                selectCoreUSB.Add(coreList[0] != 1 && selectCoreGPU[0] != coreList[0] ? coreList[coreList.Length - 2] : coreList[coreList.Length - 1]);
+                                selectCoreUSB.Add(coreList[0] != 1 && selectCoreGPU[0] != coreList[0] ? coreList[coreList.Length - 1] : coreList[coreList.Length - 2]);
                             }
+
+                            if (selectCoreNIC.Count == 0)
+                            {
+                                selectCoreNIC.Add(coreList[0] != 1 && selectCoreGPU[0] != coreList[0] && selectCoreUSB[0] != coreList[0] ? coreList[coreList.Length - 4] : coreList[coreList.Length - 3]);
+                            }
+
                         }
                         break;
                     default:
@@ -156,9 +175,8 @@ namespace AffinityProgram.Find_Core
                 //Converting to array.
                 int[] selectedCoreGPU = selectCoreGPU.ToArray();
                 int[] selectedCoreUSB = selectCoreUSB.ToArray();
-
-
-
+                selectedCoreNIC = selectCoreNIC.ToArray();
+                
                 //  |   |   |   |   |   |
 
                 convertArray(selectedCoreGPU, "GPU");
@@ -167,6 +185,8 @@ namespace AffinityProgram.Find_Core
 
                 convertArray(selectedCoreUSB, "USB");
                 Model_UsbDevices model_UsbDevices = new Model_UsbDevices(USBArray: USBhexBytes);
+
+                Model_NicDevices model_NicDevices = new Model_NicDevices(NicArray: selectedCoreNIC);
 
                 foreach (var coreGPU in selectCoreGPU) { Console.WriteLine("Selected processor for GPU:Processor {0}", Math.Log(coreGPU, 2)); }
                 foreach (var coreUSB in selectCoreUSB) { Console.WriteLine("Selected processor for USB:Processor {0}", Math.Log(coreUSB, 2)); }
@@ -193,14 +213,13 @@ namespace AffinityProgram.Find_Core
             if (ArraySource == "GPU")
             {
                 GPUhexBytes = new byte[byteSize];
-                Array.Copy(tempBytes, 0, GPUhexBytes, 0, byteSize);
+                Array.Copy(tempBytes, 0, GPUhexBytes, 0, byteSize);                
             }
             else
             {
                 USBhexBytes = new byte[byteSize];
                 Array.Copy(tempBytes, 0, USBhexBytes, 0, byteSize);
             }
-
         }
     }
 }
