@@ -190,6 +190,7 @@ namespace AffinityProgram.Find_Core
 
                 foreach (var coreGPU in selectCoreGPU) { Console.WriteLine("Selected processor for GPU:Processor {0}", Math.Log(coreGPU, 2)); }
                 foreach (var coreUSB in selectCoreUSB) { Console.WriteLine("Selected processor for USB:Processor {0}", Math.Log(coreUSB, 2)); }
+                foreach (var coreUSB in selectCoreUSB) { Console.WriteLine("Selected processor for NIC:Processor {0}", Math.Log(selectedCoreNIC[0], 2)); }
 
                 // Prompt user to exit the program
                 Console.WriteLine("\n" + "Press any key to return menu...");

@@ -42,7 +42,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                     if (IsSmtEnabled)
                                     {
                                         // Bind the base processor to CPU for RSS
-                                        Console.WriteLine($"Binding the base processor to CPU 4 for RSS on '{adapterName}'.");
+                                        Console.WriteLine($"Binding the base processor to CPU '4' for RSS on '{adapterName}'.");
                                         powershell.AddCommand("Set-NetAdapterRss")
                                                          .AddParameter("Name", adapterName)
                                                          .AddParameter("BaseProcessorNumber", 4)
@@ -50,7 +50,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                     }
                                     else
                                     {                                        
-                                        Console.WriteLine($"Binding the base processor to CPU 2 for RSS on '{adapterName}'.");
+                                        Console.WriteLine($"Binding the base processor to CPU '2' for RSS on '{adapterName}'.");
                                         powershell.AddCommand("Set-NetAdapterRss")
                                                          .AddParameter("Name", adapterName)
                                                          .AddParameter("BaseProcessorNumber", 2)
@@ -63,7 +63,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                             else
                             {                                
                                 // Bind the base processor to selected CPU for RSS
-                                Console.WriteLine($"Binding the base processor to CPU 2 for RSS on '{adapterName}'.");
+                                Console.WriteLine($"Binding the base processor to CPU '{selectedCore}' for RSS on '{adapterName}'.");
                                 powershell.AddCommand("Set-NetAdapterRss")
                                                  .AddParameter("Name", adapterName)
                                                  .AddParameter("BaseProcessorNumber", selectedCore)
@@ -71,7 +71,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                             }
 
                             // Settings max processors to 2. This set Number of receive queue to 2
-                            Console.WriteLine($"Binding the base processor to 3 for RSS on '{adapterName}'.");
+                            Console.WriteLine($"Selecting max processors for 2 CPUs '{adapterName}'.");
                             powershell.AddCommand("Set-NetAdapterRss")
                                              .AddParameter("Name", adapterName)
                                              .AddParameter("MaxProcessors", 2)
