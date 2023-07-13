@@ -71,7 +71,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                             }
 
                             // Settings max processors to 2. This set Number of receive queue to 2
-                            Console.WriteLine($"Selecting max processors for 2 CPUs '{adapterName}'.");
+                            Console.WriteLine($"Selecting max processors for '2' CPUs '{adapterName}'.");
                             powershell.AddCommand("Set-NetAdapterRss")
                                              .AddParameter("Name", adapterName)
                                              .AddParameter("MaxProcessors", 2)
