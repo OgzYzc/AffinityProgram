@@ -13,6 +13,8 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
             var selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
             bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
 
+            Console.WriteLine(selectedCore+1);
+
             try
             {
                 // Find currently adapter name user using
@@ -47,6 +49,11 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                                          .AddParameter("Name", adapterName)
                                                          .AddParameter("BaseProcessorNumber", 4)
                                                          .Invoke();
+
+                                        powershell.AddCommand("Set-NetAdapterRss")
+                                             .AddParameter("Name", adapterName)
+                                             .AddParameter("MaxProcessornumber", 5)
+                                             .Invoke();
                                     }
                                     else
                                     {                                        
@@ -55,6 +62,11 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                                          .AddParameter("Name", adapterName)
                                                          .AddParameter("BaseProcessorNumber", 2)
                                                          .Invoke();
+
+                                        powershell.AddCommand("Set-NetAdapterRss")
+                                             .AddParameter("Name", adapterName)
+                                             .AddParameter("MaxProcessornumber", 3)
+                                             .Invoke();
                                     }
                                 }
                                 else
@@ -68,6 +80,11 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                                  .AddParameter("Name", adapterName)
                                                  .AddParameter("BaseProcessorNumber", selectedCore)
                                                  .Invoke();
+
+                                powershell.AddCommand("Set-NetAdapterRss")
+                                             .AddParameter("Name", adapterName)
+                                             .AddParameter("MaxProcessornumber", selectedCore+1)
+                                             .Invoke();
                             }
 
                             // Settings max processors to 2. This set Number of receive queue to 2
