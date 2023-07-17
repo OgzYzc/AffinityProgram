@@ -13,8 +13,6 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
             var selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
             bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
 
-            Console.WriteLine(selectedCore+1);
-
             try
             {
                 // Find currently adapter name user using
