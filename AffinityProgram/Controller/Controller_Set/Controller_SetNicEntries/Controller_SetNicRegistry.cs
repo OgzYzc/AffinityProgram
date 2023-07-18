@@ -19,12 +19,13 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             try
             {
                 //Adding RssBaseCpu to Ndis service
-                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Services\NDIS\Parameters");
+                var ndisRegistryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Services\NDIS\Parameters");
+                var tcpipRegistryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Services\Tcpip");
 
                 var regSecurity = new RegistrySecurity();
                 regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
 
-                using (var key = Registry.LocalMachine.CreateSubKey(registryPath.RegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                using (var ndisKey = Registry.LocalMachine.CreateSubKey(ndisRegistryPath.RegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                 {
 
                     if (Find_Core_CPPC.selectedCoreNIC == null)
@@ -38,11 +39,11 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                         {
                             if (View.MainMenu.isSmtEnabled)
                             {
-                                key.SetValue("RssBaseCpu", "4", RegistryValueKind.DWord);
+                                ndisKey.SetValue("RssBaseCpu", "4", RegistryValueKind.DWord);
                             }
                             else
                             {
-                                key.SetValue("RssBaseCpu", "2", RegistryValueKind.DWord);
+                                ndisKey.SetValue("RssBaseCpu", "2", RegistryValueKind.DWord);
                             }
                         }
                         else
@@ -51,13 +52,21 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                     else
                     {
                         var selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
-                        key.SetValue("RssBaseCpu", selectedCore, RegistryValueKind.DWord);
+                        ndisKey.SetValue("RssBaseCpu", selectedCore, RegistryValueKind.DWord);
                     }
 
                     //Use max 2 core on either choice
-                    key.SetValue("MaxNumRssCpus", "2", RegistryValueKind.DWord);
+                    ndisKey.SetValue("MaxNumRssCpus", "2", RegistryValueKind.DWord);
+
+                    using (var tcpipKey = Registry.LocalMachine.CreateSubKey(tcpipRegistryPath.RegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                    {
+                        tcpipKey.SetValue("DisableTaskOffload","0",RegistryValueKind.DWord);
+                    }
+
                     Console.WriteLine("Registry key added successfully.\nExecuting powershell.");
                 }
+
+
                 //Waiting 3 seconds for dramatic effect
                 Thread.Sleep(3000);
 
