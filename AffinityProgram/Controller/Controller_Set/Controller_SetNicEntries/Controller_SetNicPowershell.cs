@@ -28,6 +28,12 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                         string adapterName = adapter.Properties["Name"].Value.ToString();
                         Console.WriteLine($"Adapter name : '{adapterName}' ");
 
+                        // NumberofReceiveQueue workaround
+                        Console.WriteLine($"Selecting max processors for '1' CPUs '{adapterName}'.");
+                        powershell.AddCommand("Set-NetAdapterRss")
+                                         .AddParameter("Name", adapterName)
+                                         .AddParameter("MaxProcessors", 1)
+                                         .Invoke();
                         try
                         {
                             if (Find_Core_CPPC.selectedCoreNIC == null)
@@ -92,54 +98,54 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                              .AddParameter("MaxProcessors", 2)
                                              .Invoke();
 
-                            // Verify the base processor for RSS
-                            Console.WriteLine($"Verifying the base processor for RSS on '{adapterName}'.");
-                            powershell.Commands.Clear();
-                            powershell.AddCommand("Get-NetAdapterRss")
-                                             .AddParameter("Name", adapterName);
-                            var results = powershell.Invoke();
-                            if (results.Count > 0)
-                            {
-                                var rss = results[0];
-                                var baseProcessorNumber = rss.Properties["BaseProcessorNumber"].Value.ToString();
-                                if (Find_Core_CPPC.selectedCoreNIC == null)
-                                {
-                                    if (IsSmtEnabled)
-                                    {
-                                        if (baseProcessorNumber == "4")
-                                        {
-                                            Console.WriteLine($"Successfully bound the base processor to CPU '4' for RSS on '{adapterName}'.");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine($"Failed to bind the base processor to CPU '4' for RSS on '{adapterName}'.");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (baseProcessorNumber == "2")
-                                        {
-                                            Console.WriteLine($"Successfully bound the base processor to CPU '2' for RSS on '{adapterName}'.");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine($"Failed to bind the base processor to CPU '2' for RSS on '{adapterName}'.");
-                                        }
-                                    }                                        
-                                }
-                                else
-                                {
-                                    if (baseProcessorNumber == selectedCore.ToString())
-                                    {
-                                        Console.WriteLine($"Successfully bound the base processor to CPU '{selectedCore}' for RSS on '{adapterName}'.");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine($"Failed to bind the base processor to CPU '{selectedCore}' for RSS on '{adapterName}'.");
-                                    }
-                                }
+                            //// Verify the base processor for RSS
+                            //Console.WriteLine($"Verifying the base processor for RSS on '{adapterName}'.");
+                            //powershell.Commands.Clear();
+                            //powershell.AddCommand("Get-NetAdapterRss")
+                            //                 .AddParameter("Name", adapterName);
+                            //var results = powershell.Invoke();
+                            //if (results.Count > 0)
+                            //{
+                            //    var rss = results[0];
+                            //    var baseProcessorNumber = rss.Properties["BaseProcessorNumber"].Value.ToString();
+                            //    if (Find_Core_CPPC.selectedCoreNIC == null)
+                            //    {
+                            //        if (IsSmtEnabled)
+                            //        {
+                            //            if (baseProcessorNumber == "4")
+                            //            {
+                            //                Console.WriteLine($"Successfully bound the base processor to CPU '4' for RSS on '{adapterName}'.");
+                            //            }
+                            //            else
+                            //            {
+                            //                Console.WriteLine($"Failed to bind the base processor to CPU '4' for RSS on '{adapterName}'.");
+                            //            }
+                            //        }
+                            //        else
+                            //        {
+                            //            if (baseProcessorNumber == "2")
+                            //            {
+                            //                Console.WriteLine($"Successfully bound the base processor to CPU '2' for RSS on '{adapterName}'.");
+                            //            }
+                            //            else
+                            //            {
+                            //                Console.WriteLine($"Failed to bind the base processor to CPU '2' for RSS on '{adapterName}'.");
+                            //            }
+                            //        }                                        
+                            //    }
+                            //    else
+                            //    {
+                            //        if (baseProcessorNumber == selectedCore.ToString())
+                            //        {
+                            //            Console.WriteLine($"Successfully bound the base processor to CPU '{selectedCore}' for RSS on '{adapterName}'.");
+                            //        }
+                            //        else
+                            //        {
+                            //            Console.WriteLine($"Failed to bind the base processor to CPU '{selectedCore}' for RSS on '{adapterName}'.");
+                            //        }
+                            //    }
                                 
-                            }
+                            //}
 
                             // Restart the current adapter
                             Console.WriteLine($"Restarting adapter '{adapterName}'\nWaiting 10 seconds for the adapter to restart itself.");

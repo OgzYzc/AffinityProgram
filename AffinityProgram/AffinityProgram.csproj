@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\Controller_Rem\Controller_RemNicAffinity.cs" />
+    <Compile Include="Controller\Controller_Rem\Controller_RemPciAffinity.cs" />
+    <Compile Include="Controller\Controller_Rem\Controller_RemUsbAffinity.cs" />
     <Compile Include="Find_Core\Find_Core_Benchmark.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListNicDevices.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListPciDevices.cs" />

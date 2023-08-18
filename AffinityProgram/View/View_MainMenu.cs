@@ -1,4 +1,5 @@
 ﻿using AffinityProgram.Benchmark;
+using AffinityProgram.Controller.Controller_Del;
 using AffinityProgram.Controller.Controller_List;
 using AffinityProgram.Controller.Controller_Set;
 using AffinityProgram.Controller.Controller_SetInterruptPriority;
@@ -50,6 +51,7 @@ namespace AffinityProgram.View
                 "Set interrupt priority",
                 "Set message limit",
                 "Powershell settings",
+                "Remove affinity",
             };
             //Submenu options for PCI
             string[] subOptions2 = new string[]
@@ -58,6 +60,7 @@ namespace AffinityProgram.View
                 "Show devices",
                 "Set interrupt priority",
                 "Set message limit",
+                "Remove affinity",
             };
             //Submenu options for USB
             string[] subOptions3 = new string[] {
@@ -65,13 +68,14 @@ namespace AffinityProgram.View
                 "Show devices",
                 "Set interrupt priority",
                 "Set message limit",
+                "Remove affinity",
             };
             string[] subOptions4 = new string[]
             {
                 "Find preffered core order (CPPC)",
                 "Benchmark",
             };
-            
+
             // Make the first option of main menu selected as default
             int selectedIndex = 0;
             int previousSelectedIndex = -1;
@@ -103,7 +107,7 @@ namespace AffinityProgram.View
                 // Display the menu options
                 for (int i = 0; i < displayOptions.Length; i++)
                 {
-                    
+
                     // Set colors
                     ConsoleColor foregroundColor = ConsoleColor.Gray;
                     ConsoleColor backgroundColor = ConsoleColor.Black;
@@ -117,14 +121,14 @@ namespace AffinityProgram.View
                     // Calculate the position of the option on the console window
                     int centerY = Console.WindowHeight / 2 - displayOptions.Length / 2 + i;
                     int leftPadding = centerX - displayOptions[i].Length / 2;
-                    
+
                     // Set the console colors and display the option
                     Console.ForegroundColor = foregroundColor;
                     Console.BackgroundColor = backgroundColor;
                     Console.SetCursorPosition(leftPadding, centerY);
                     Console.Write(displayOptions[i]);
                 }
-                
+
                 // Wait for a key to be pressed
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
@@ -176,6 +180,10 @@ namespace AffinityProgram.View
                                         Controller_SetNicRegistry controller_SetNicRegistry = new Controller_SetNicRegistry();
                                         Console.ReadKey(true);
                                         break;
+                                    case 5:
+                                        Controller_RemNicAffinity controller_RemNicAffinity = new Controller_RemNicAffinity();
+                                        Console.ReadKey(true);
+                                        break;
                                     default:
                                         break;
                                 }
@@ -202,6 +210,11 @@ namespace AffinityProgram.View
                                     //Set msi limit
                                     case 3:
                                         Controller_SetPciMsiLimit controller_SetPciMsiLimit = new Controller_SetPciMsiLimit();
+                                        Console.ReadKey(true);
+                                        break;
+                                    //Remove affinity
+                                    case 4:
+                                        Controller_RemPciAffinity controller_RemPciAffinity = new Controller_RemPciAffinity();
                                         Console.ReadKey(true);
                                         break;
                                     default:
@@ -232,6 +245,10 @@ namespace AffinityProgram.View
                                         Controller_SetUsbMsiLimit controller_SetUsbMsiLimit = new Controller_SetUsbMsiLimit();
                                         Console.ReadKey(true);
                                         break;
+                                    case 4:
+                                        Controller_RemPciAffinity controller_RemPciAffinity = new Controller_RemPciAffinity();
+                                        Console.ReadKey(true);
+                                        break;
                                     default:
                                         break;
                                 }
@@ -240,7 +257,7 @@ namespace AffinityProgram.View
                                 switch (selectedIndex)
                                 {
                                     case 0:
-                                        
+
                                         Find_Core_CPPC find_Core_CPPC = new Find_Core_CPPC();
                                         find_Core_CPPC.Run();
                                         break;
@@ -311,7 +328,7 @@ namespace AffinityProgram.View
         public static int physicalCoreCount = 0;
         public static int logicalCoreCount = 0;
         public static void CheckCPU()
-        {            
+        {
             //Physical core count
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
             {
@@ -320,7 +337,7 @@ namespace AffinityProgram.View
 
             Console.Write($"P:{physicalCoreCount} ", Console.ForegroundColor = ConsoleColor.Green);
 
-            
+
             //Thread count
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_Processor").Get())
             {
