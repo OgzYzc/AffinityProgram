@@ -10,7 +10,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
     {
         public static void Run()
         {
-            var selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
+            
             bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
 
             try
@@ -27,15 +27,17 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                         // Get the adapter name from the current adapter object
                         string adapterName = adapter.Properties["Name"].Value.ToString();
                         Console.WriteLine($"Adapter name : '{adapterName}' ");
-
-                        // NumberofReceiveQueue workaround
-                        Console.WriteLine($"Selecting max processors for '1' CPUs '{adapterName}'.");
-                        powershell.AddCommand("Set-NetAdapterRss")
-                                         .AddParameter("Name", adapterName)
-                                         .AddParameter("MaxProcessors", 1)
-                                         .Invoke();
+                        
                         try
                         {
+                            powershell.Commands.Clear();
+                            // Numberofreceivequeue workaround
+                            Console.WriteLine($"Selecting max processors for '1' CPUs '{adapterName}'.");
+                            powershell.AddCommand("Set-NetAdapterRss")
+                                             .AddParameter("Name", adapterName)
+                                             .AddParameter("MaxProcessors", 1)
+                                             .Invoke();
+
                             if (Find_Core_CPPC.selectedCoreNIC == null)
                             {
                                 Console.WriteLine("You are adding affinity without using CPPC. " +
@@ -60,7 +62,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                              .Invoke();
                                     }
                                     else
-                                    {                                        
+                                    {
                                         Console.WriteLine($"Binding the base processor to CPU '2' for RSS on '{adapterName}'.");
                                         powershell.AddCommand("Set-NetAdapterRss")
                                                          .AddParameter("Name", adapterName)
@@ -77,7 +79,9 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                                     break;
                             }
                             else
-                            {                                
+                            {
+                                var selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
+
                                 // Bind the base processor to selected CPU for RSS
                                 Console.WriteLine($"Binding the base processor to CPU '{selectedCore}' for RSS on '{adapterName}'.");
                                 powershell.AddCommand("Set-NetAdapterRss")
@@ -87,16 +91,9 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
 
                                 powershell.AddCommand("Set-NetAdapterRss")
                                              .AddParameter("Name", adapterName)
-                                             .AddParameter("MaxProcessornumber", selectedCore+1)
+                                             .AddParameter("MaxProcessornumber", selectedCore + 1)
                                              .Invoke();
                             }
-
-                            // Settings max processors to 2. This set Number of receive queue to 2
-                            Console.WriteLine($"Selecting max processors for '2' CPUs '{adapterName}'.");
-                            powershell.AddCommand("Set-NetAdapterRss")
-                                             .AddParameter("Name", adapterName)
-                                             .AddParameter("MaxProcessors", 2)
-                                             .Invoke();
 
                             //// Verify the base processor for RSS
                             //Console.WriteLine($"Verifying the base processor for RSS on '{adapterName}'.");
@@ -144,8 +141,23 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                             //            Console.WriteLine($"Failed to bind the base processor to CPU '{selectedCore}' for RSS on '{adapterName}'.");
                             //        }
                             //    }
-                                
+
                             //}
+                            
+                            // Restart the current adapter
+                            Console.WriteLine($"Restarting adapter '{adapterName}'\nWaiting 10 seconds for the adapter to restart itself.");
+                            powershell.Commands.Clear();
+                            powershell.AddCommand("Restart-NetAdapter")
+                                             .AddParameter("Name", adapterName)
+                                             .Invoke();
+
+                            powershell.Commands.Clear();
+                            // Settings max processors to 2. This set Number of receive queue to 2
+                            Console.WriteLine($"Selecting max processors for '2' CPUs '{adapterName}'.");
+                            powershell.AddCommand("Set-NetAdapterRss")
+                                             .AddParameter("Name", adapterName)
+                                             .AddParameter("MaxProcessors", 2)
+                                             .Invoke();
 
                             // Restart the current adapter
                             Console.WriteLine($"Restarting adapter '{adapterName}'\nWaiting 10 seconds for the adapter to restart itself.");
@@ -171,8 +183,9 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                         catch (Exception ex)
                         {
                             Console.WriteLine($"An error occurred while processing adapter '{adapterName}'\nGo back and try again.: {ex.Message}");
-                        }
+                        }                        
                     }
+                    powershell.Dispose();
                 }
             }
             catch (Exception ex)
@@ -180,5 +193,5 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                 Console.WriteLine(ex.Message);
             }
         }
-    }    
+    }
 }

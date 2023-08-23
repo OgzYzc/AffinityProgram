@@ -22,6 +22,7 @@ namespace AffinityProgram.Controller.Controller_Set
                 var regSecurity = new RegistrySecurity();
                 regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
 
+
                 foreach (var device in devices)
                 {
                     if (!string.IsNullOrEmpty(device.DeviceID))
@@ -29,7 +30,7 @@ namespace AffinityProgram.Controller.Controller_Set
                         var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
-                        if (Find_Core_CPPC.USBhexBytes == null)
+                            if (Find_Core_CPPC.USBhexBytes == null)
                             {
                                 Console.WriteLine("You are adding affinity without using CPPC. " +
                                     "If you enabled CPPC go back to menu and press 'Find best core' then come back." +
@@ -40,15 +41,17 @@ namespace AffinityProgram.Controller.Controller_Set
                                 {
                                     if (View.MainMenu.isSmtEnabled)
                                     {
+
                                         key.SetValue("AssignmentSetOverride", new byte[] { 00, 01 }, RegistryValueKind.Binary);
                                         key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
                                         Console.WriteLine("Affinity added.");
+
                                     }
                                     else
                                     {
-                                        key.SetValue("AssignmentSetOverride", new byte[] { 16 }, RegistryValueKind.Binary);
+                                        key.SetValue("AssignmentSetOverride", new byte[] { 4 }, RegistryValueKind.Binary);
                                         key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
-                                        Console.WriteLine("Affinity added.");
+                                            Console.WriteLine("Affinity added.");                                       
                                     }
                                 }
                                 else
@@ -64,8 +67,8 @@ namespace AffinityProgram.Controller.Controller_Set
                             }
                         }
                     }
+                    }
                 }
-            }
             catch (Exception ex)
             {
 

@@ -246,7 +246,7 @@ namespace AffinityProgram.View
                                         Console.ReadKey(true);
                                         break;
                                     case 4:
-                                        Controller_RemPciAffinity controller_RemPciAffinity = new Controller_RemPciAffinity();
+                                        Controller_RemUsbAffinity controller_RemUsbAffinity = new Controller_RemUsbAffinity();
                                         Console.ReadKey(true);
                                         break;
                                     default:
