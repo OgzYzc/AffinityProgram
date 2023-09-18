@@ -9,11 +9,7 @@ namespace AffinityProgram.Benchmark
 {
     internal class Find_Core_Benchmark
     {
-        public Find_Core_Benchmark()
-        {
-
-        }
-        public void Run()
+        public void FindCoreBenchmark()
         {
             Console.WriteLine("Welcome to the Core Benchmark program!.");
 

@@ -19,11 +19,9 @@ namespace AffinityProgram.Controller.Controller_SetMsiLimit
 			{
                 var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties");
 
-                var deviceInfo = new Query_NicDevices();
-                var devices = deviceInfo.GetDevices<Model_NicDevices>();
+                var devices = GetNicDevices();
 
-                var regSecurity = new RegistrySecurity();
-                regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+                var regSecurity = CreateRegistrySecurity();
 
                 foreach (var device in devices)
                 {
@@ -42,6 +40,18 @@ namespace AffinityProgram.Controller.Controller_SetMsiLimit
 			{
                 Console.WriteLine(ex.Message);
             }
+        }
+        private List<Model_NicDevices> GetNicDevices()
+        {
+            var deviceInfo = new Query_NicDevices();
+            return deviceInfo.GetDevices<Model_NicDevices>();
+        }
+
+        private RegistrySecurity CreateRegistrySecurity()
+        {
+            var regSecurity = new RegistrySecurity();
+            regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+            return regSecurity;
         }
     }
 }

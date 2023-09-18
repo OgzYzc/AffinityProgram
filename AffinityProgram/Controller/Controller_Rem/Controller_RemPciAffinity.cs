@@ -17,13 +17,11 @@ namespace AffinityProgram.Controller.Controller_Del
         {
             try
             {
-                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");               
+                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
-                var deviceInfo = new Query_PciDevices();
-                var devices = deviceInfo.GetDevices<Model_PciDevices>();
+                var devices = GetPciDevices();
 
-                var regSecurity = new RegistrySecurity();
-                regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+                var regSecurity = CreateRegistrySecurity();
 
                 foreach (var device in devices)
                 {
@@ -43,6 +41,19 @@ namespace AffinityProgram.Controller.Controller_Del
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+        private List<Model_PciDevices> GetPciDevices()
+        {
+            var deviceInfo = new Query_PciDevices();
+            return deviceInfo.GetDevices<Model_PciDevices>();
+        }
+
+
+        private RegistrySecurity CreateRegistrySecurity()
+        {
+            var regSecurity = new RegistrySecurity();
+            regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+            return regSecurity;
         }
     }
 }

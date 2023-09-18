@@ -1,7 +1,9 @@
 ﻿using AffinityProgram.Benchmark;
 using AffinityProgram.Controller.Controller_Del;
 using AffinityProgram.Controller.Controller_List;
+using AffinityProgram.Controller.Controller_Rem;
 using AffinityProgram.Controller.Controller_Set;
+using AffinityProgram.Controller.Controller_Set.Controller_SetAffinity;
 using AffinityProgram.Controller.Controller_SetInterruptPriority;
 using AffinityProgram.Controller.Controller_SetMsiLimit;
 using AffinityProgram.Controller.Controller_SetNicPowershell;
@@ -61,6 +63,7 @@ namespace AffinityProgram.View
                 "Set interrupt priority",
                 "Set message limit",
                 "Remove affinity",
+                "Remove pci bridge affinity",
             };
             //Submenu options for USB
             string[] subOptions3 = new string[] {
@@ -217,6 +220,11 @@ namespace AffinityProgram.View
                                         Controller_RemPciAffinity controller_RemPciAffinity = new Controller_RemPciAffinity();
                                         Console.ReadKey(true);
                                         break;
+                                    //Remove Pci bridge affinity
+                                    case 5:
+                                        Controller_RemPciBridgeAffinity controller_RemPciBridgeAffinity = new Controller_RemPciBridgeAffinity();
+                                        Console.ReadKey(true);
+                                        break;
                                     default:
                                         break;
                                 }
@@ -259,11 +267,11 @@ namespace AffinityProgram.View
                                     case 0:
 
                                         Find_Core_CPPC find_Core_CPPC = new Find_Core_CPPC();
-                                        find_Core_CPPC.Run();
+                                        find_Core_CPPC.FindCoreCPPC();
                                         break;
                                     case 1:
                                         Find_Core_Benchmark find_Core_Benchmark = new Find_Core_Benchmark();
-                                        find_Core_Benchmark.Run();
+                                        find_Core_Benchmark.FindCoreBenchmark();
                                         break;
                                 }
                                 break;

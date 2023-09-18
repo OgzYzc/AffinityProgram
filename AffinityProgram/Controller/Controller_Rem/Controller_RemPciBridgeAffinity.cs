@@ -1,4 +1,5 @@
-﻿using AffinityProgram.Model;
+﻿using AffinityProgram.Controller.Controller_Set.Controller_SetAffinity;
+using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
@@ -9,25 +10,26 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AffinityProgram.Controller.Controller_Del
+namespace AffinityProgram.Controller.Controller_Rem
 {
-    internal class Controller_RemUsbAffinity
+    internal class Controller_RemPciBridgeAffinity
     {
-        public Controller_RemUsbAffinity()
+        public Controller_RemPciBridgeAffinity()
         {
             try
             {
                 var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
-                var devices = GetUsbDevices();
-
                 var regSecurity = CreateRegistrySecurity();
 
-                foreach (var device in devices)
+                Controller_SetPciBridgeAffinity controller_SetPciBridgeAffinity = new Controller_SetPciBridgeAffinity();
+                controller_SetPciBridgeAffinity.SetPciBridgeAffinity();
+
+                foreach (var device in Controller_SetPciBridgeAffinity.PciBridgeList)
                 {
-                    if (!string.IsNullOrEmpty(device.DeviceID))
+                    if (!string.IsNullOrEmpty(device.ToString()))
                     {
-                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
+                        var keyPath = registryPath.RegistryPath.Replace("$i", device.ToString());
                         using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
                             key.DeleteValue("AssignmentSetOverride");
@@ -42,13 +44,6 @@ namespace AffinityProgram.Controller.Controller_Del
                 Console.WriteLine(ex.Message);
             }
         }
-        private List<Model_UsbDevices> GetUsbDevices()
-        {
-            var deviceInfo = new Query_UsbDevices();
-            return deviceInfo.GetDevices<Model_UsbDevices>();
-        }
-
-
         private RegistrySecurity CreateRegistrySecurity()
         {
             var regSecurity = new RegistrySecurity();

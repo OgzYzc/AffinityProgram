@@ -17,13 +17,12 @@ namespace AffinityProgram.Controller.Controller_Set
         {
             try
             {
-                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");                
-
-                var deviceInfo = new Query_NicDevices();
-                var devices = deviceInfo.GetDevices<Model_NicDevices>();
-
-                var regSecurity = new RegistrySecurity();
-                regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+                
+                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
+                
+                var devices = GetNicDevices();
+                
+                var regSecurity = CreateRegistrySecurity();
 
                 foreach (var device in devices)
                 {
@@ -42,6 +41,19 @@ namespace AffinityProgram.Controller.Controller_Set
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+        private List<Model_NicDevices> GetNicDevices()
+        {
+            var deviceInfo = new Query_NicDevices();
+            return deviceInfo.GetDevices<Model_NicDevices>();
+        }
+
+
+        private RegistrySecurity CreateRegistrySecurity()
+        {
+            var regSecurity = new RegistrySecurity();
+            regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+            return regSecurity;
         }
     }
 }

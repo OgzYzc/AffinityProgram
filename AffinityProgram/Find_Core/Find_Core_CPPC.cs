@@ -19,7 +19,7 @@ namespace AffinityProgram.Find_Core
         static bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
 
         public static int[] selectedCoreNIC;
-        public void Run()
+        public void FindCoreCPPC()
         {
             Console.WriteLine("This program uses event viewer to find out preffered core tags. You need to enable CPPC and CPPC preffered cores in bios");
 
