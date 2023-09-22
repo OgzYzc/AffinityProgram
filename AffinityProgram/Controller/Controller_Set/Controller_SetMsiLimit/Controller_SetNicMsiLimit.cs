@@ -3,11 +3,8 @@ using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_SetMsiLimit
 {
@@ -15,8 +12,8 @@ namespace AffinityProgram.Controller.Controller_SetMsiLimit
     {
         public Controller_SetNicMsiLimit()
         {
-			try
-			{
+            try
+            {
                 var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties");
 
                 var devices = GetNicDevices();
@@ -36,8 +33,8 @@ namespace AffinityProgram.Controller.Controller_SetMsiLimit
                     }
                 }
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
             }
         }

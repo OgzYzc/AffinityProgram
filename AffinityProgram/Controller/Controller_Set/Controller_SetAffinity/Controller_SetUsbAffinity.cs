@@ -13,55 +13,53 @@ namespace AffinityProgram.Controller.Controller_Set
     {
         public Controller_SetUsbAffinity()
         {
-            try
+            bool continueProgram = CPPCError();
+            if (continueProgram)
             {
-                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
-
-                var devices = GetUsbDevices();
-
-                var regSecurity = CreateRegistrySecurity();
-
-                foreach (var device in devices)
+                Console.Clear();
+                try
                 {
-                    if (string.IsNullOrEmpty(device.DeviceID))
-                        continue;
+                    var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
-                    var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
+                    var devices = GetUsbDevices();
 
-                    using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                    var regSecurity = CreateRegistrySecurity();
+
+
+
+                    foreach (var device in devices)
                     {
-                        if (Find_Core_CPPC.USBhexBytes == null)
-                        {
-                            Console.WriteLine("You are adding affinity without using CPPC. " +
-                                "If you enabled CPPC go back to menu and press 'Find best core' then come back." +
-                                "Or you can add predetermined affinity. Press Enter for adding Predetermined affinity.");
+                        if (string.IsNullOrEmpty(device.DeviceID))
+                            continue;
 
-                            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                            if (keyInfo.Key == ConsoleKey.Enter)
+                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
+
+
+                        using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                        {
+                            if (Find_Core_CPPC.USBhexBytes == null)
                             {
-                                Console.Clear();
                                 AddAffintyNoCPPC(key);
                             }
                             else
                             {
-                                return;
+                                key.SetValue("AssignmentSetOverride", Find_Core_CPPC.USBhexBytes, RegistryValueKind.Binary);
+                                key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
+                                Console.WriteLine("Affinity added.");
                             }
                         }
-                        else
-                        {
-                            key.SetValue("AssignmentSetOverride", Find_Core_CPPC.USBhexBytes, RegistryValueKind.Binary);
-                            key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
-                            Console.WriteLine("Affinity added.");
-                        }
                     }
+
                 }
+                catch (Exception ex)
+                {
 
+                    Console.WriteLine(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
 
-                Console.WriteLine(ex.Message);
-            }
+            else
+                return;
         }
         private List<Model_UsbDevices> GetUsbDevices()
         {
@@ -78,11 +76,29 @@ namespace AffinityProgram.Controller.Controller_Set
         }
         private static void AddAffintyNoCPPC(RegistryKey key)
         {
-            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 00, 01 } : new byte[] { 8 };
+            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 32 } : new byte[] { 8 };
 
             key.SetValue("AssignmentSetOverride", assignmentSetOverrideValue, RegistryValueKind.Binary);
             key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
-            Console.WriteLine("Pci affinity added.");
+            Console.WriteLine("Usb affinity added.");
+        }
+
+        private bool CPPCError()
+        {
+
+            Console.WriteLine("You are adding affinity without using CPPC. " +
+                              "If you enabled CPPC, go back to the menu and press 'Find best core' then come back." +
+                              " Or you can add predetermined affinity. Press Enter for adding Predetermined affinity.");
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

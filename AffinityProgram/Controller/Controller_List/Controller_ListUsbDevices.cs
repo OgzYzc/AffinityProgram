@@ -1,10 +1,6 @@
 ﻿using AffinityProgram.Model;
 using AffinityProgram.Queries.Concrete;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_List
 {

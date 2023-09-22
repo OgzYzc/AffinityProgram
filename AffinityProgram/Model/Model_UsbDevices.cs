@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Model
 {
     internal class Model_UsbDevices
     {
-        public Model_UsbDevices(string UsbDeviceID=null)
+        public Model_UsbDevices(string UsbDeviceID = null)
         {
             if (!UsbDeviceID.Contains("SWD"))
             {

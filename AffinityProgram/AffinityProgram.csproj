@@ -71,7 +71,7 @@
     <Compile Include="Controller\Controller_Rem\Controller_RemPciAffinity.cs" />
     <Compile Include="Controller\Controller_Rem\Controller_RemPciBridgeAffinity.cs" />
     <Compile Include="Controller\Controller_Rem\Controller_RemUsbAffinity.cs" />
-    <Compile Include="Controller\Controller_Set\Controller_SetAffinity\Controller_SetPciBridgeAffinity.cs" />
+    <Compile Include="Controller\Controller_List\Controller_ListPciBridges.cs" />
     <Compile Include="Find_Core\Find_Core_Benchmark.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListNicDevices.cs" />
     <Compile Include="Controller\Controller_List\Controller_ListPciDevices.cs" />

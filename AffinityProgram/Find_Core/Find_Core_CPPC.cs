@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Find_Core
 {
@@ -144,6 +141,10 @@ namespace AffinityProgram.Find_Core
                                 //Selecting second to last index for USB. 
                                 selectCoreUSB.Add(coreList[0] != 1 && selectCoreGPU[0] != coreList[0] ? coreList[coreList.Length - 1] : coreList[coreList.Length - 2]);
                             }
+                            if (selectCoreNIC.Count == 0)
+                            {
+                                selectCoreNIC.Add(coreList[0] != 1 && selectCoreGPU[0] != coreList[0] && selectCoreUSB[0] != coreList[0] ? coreList[coreList.Length - 4] : coreList[coreList.Length - 3]);
+                            }
                         }
                         break;
                     case false:
@@ -176,7 +177,7 @@ namespace AffinityProgram.Find_Core
                 int[] selectedCoreGPU = selectCoreGPU.ToArray();
                 int[] selectedCoreUSB = selectCoreUSB.ToArray();
                 selectedCoreNIC = selectCoreNIC.ToArray();
-                
+
                 //  |   |   |   |   |   |
 
                 convertArray(selectedCoreGPU, "GPU");
@@ -214,7 +215,7 @@ namespace AffinityProgram.Find_Core
             if (ArraySource == "GPU")
             {
                 GPUhexBytes = new byte[byteSize];
-                Array.Copy(tempBytes, 0, GPUhexBytes, 0, byteSize);                
+                Array.Copy(tempBytes, 0, GPUhexBytes, 0, byteSize);
             }
             else
             {

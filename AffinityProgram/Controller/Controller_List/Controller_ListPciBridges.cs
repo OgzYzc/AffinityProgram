@@ -2,16 +2,14 @@
 using AffinityProgram.Queries.Concrete;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_Set.Controller_SetAffinity
 {
-    internal class Controller_SetPciBridgeAffinity
+    internal class Controller_ListPciBridges
     {
-        
+
         const int CR_SUCCESS = 0;
 
         public static List<Model_PciBridgeDevices> PciBridgeList = new List<Model_PciBridgeDevices>();
@@ -73,8 +71,8 @@ namespace AffinityProgram.Controller.Controller_Set.Controller_SetAffinity
                     break;
 
                 var pciBridgeDevice = new Model_PciBridgeDevices(parentId);
-                PciBridgeList.Add(pciBridgeDevice);                
-            }            
+                PciBridgeList.Add(pciBridgeDevice);
+            }
         }
     }
 }

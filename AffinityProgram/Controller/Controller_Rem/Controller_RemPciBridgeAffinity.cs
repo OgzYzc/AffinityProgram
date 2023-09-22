@@ -1,14 +1,9 @@
 ﻿using AffinityProgram.Controller.Controller_Set.Controller_SetAffinity;
 using AffinityProgram.Model;
-using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_Rem
 {
@@ -22,10 +17,10 @@ namespace AffinityProgram.Controller.Controller_Rem
 
                 var regSecurity = CreateRegistrySecurity();
 
-                Controller_SetPciBridgeAffinity controller_SetPciBridgeAffinity = new Controller_SetPciBridgeAffinity();
+                Controller_ListPciBridges controller_SetPciBridgeAffinity = new Controller_ListPciBridges();
                 controller_SetPciBridgeAffinity.SetPciBridgeAffinity();
 
-                foreach (var device in Controller_SetPciBridgeAffinity.PciBridgeList)
+                foreach (var device in Controller_ListPciBridges.PciBridgeList)
                 {
                     if (!string.IsNullOrEmpty(device.ToString()))
                     {

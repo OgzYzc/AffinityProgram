@@ -3,11 +3,8 @@ using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_SetInterruptPriority
 {
@@ -17,11 +14,11 @@ namespace AffinityProgram.Controller.Controller_SetInterruptPriority
         {
             try
             {
-               
+
                 var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
-                
+
                 var devices = GetNicDevices();
-                
+
                 var regSecurity = CreateRegistrySecurity();
 
                 foreach (var device in devices)

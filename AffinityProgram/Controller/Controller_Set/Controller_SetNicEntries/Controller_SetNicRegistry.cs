@@ -1,10 +1,7 @@
-﻿using AffinityProgram.Controller.Controller_SetNicPowershell;
-using AffinityProgram.Find_Core;
-using AffinityProgram.Model;
+﻿using AffinityProgram.Find_Core;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Management.Automation;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
@@ -19,21 +16,29 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         public Controller_SetNicRegistry()
         {
-            try
+            bool continueProgram = CPPCError();
+            if (continueProgram)
             {
-                setNdisKeyValues();
-                setTcpipKeyValues();
-                setDriverKeyValues();
+                try
+                {
+                    Console.Clear();
+                    setNdisKeyValues();
+                    setTcpipKeyValues();
+                    setDriverKeyValues();
 
-                // Waiting for a short time before executing the next action
-                Thread.Sleep(3000);
-                Console.Clear();
-                Controller_SetNicPowershell.Controller_SetNicPowershell.Run();
+                    // Waiting for a short time before executing the next action
+                    Thread.Sleep(3000);
+                    Console.Clear();
+                    Controller_SetNicPowershell.Controller_SetNicPowershell.Run();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            else
+                return;
+
         }
 
         private RegistrySecurity GetRegistrySecurity()
@@ -50,24 +55,8 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             {
                 if (Find_Core_CPPC.selectedCoreNIC == null)
                 {
-                    Console.WriteLine("You are adding affinity without using CPPC. " +
-                        "If you enabled CPPC go back to menu and press 'Find best core' then come back." +
-                        "Or you can add predetermined affinity. Press Enter for adding Predetermined affinity.");
+                    ndisKey.SetValue("RssBaseCpu", View.MainMenu.isSmtEnabled ? "4" : "0", RegistryValueKind.DWord);
 
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                    if (keyInfo.Key == ConsoleKey.Enter)
-                    {
-                        if (View.MainMenu.isSmtEnabled)
-                        {
-                            ndisKey.SetValue("RssBaseCpu", "4", RegistryValueKind.DWord);
-                        }
-                        else
-                        {
-                            ndisKey.SetValue("RssBaseCpu", "0", RegistryValueKind.DWord);
-                        }
-                    }
-                    else
-                        return;
                 }
                 else
                 {
@@ -76,7 +65,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 }
 
                 // Use max 2 core on either choice
-                ndisKey.SetValue("MaxNumRssCpus", "4", RegistryValueKind.DWord);
+                ndisKey.SetValue("MaxNumRssCpus", "2", RegistryValueKind.DWord);
             }
 
             Console.WriteLine("Registry key added successfully.\nExecuting powershell.");
@@ -98,11 +87,11 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 { "*RSS", "1" },
                 { "*RSSProfile", "4" },
                 { "*RssBaseProcNumber", "0" },
-                { "*MaxRssProcessors", "4" },
+                { "*MaxRssProcessors", "12" },
                 { "*NumaNodeId", "0" },
                 { "*NumRssQueues", "4" },
                 { "*RssBaseProcGroup", "0" },
-                { "*RssMaxProcNumber", "3" },
+                { "*RssMaxProcNumber", "12" },
                 { "*RssMaxProcGroup", "0" },
 
                 //Latency
@@ -148,18 +137,30 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                     driverKey.SetValue("LLIPorts", lliPorts, RegistryValueKind.MultiString);
                 }
 
-                
-                
+
+
             }
 
-            
-
-            // Set the value in the registry
-            
+            // Set the value in the registry            
 
             Console.WriteLine("LLIPorts added to the registry.");
 
             Console.WriteLine("Driver values are added.");
+        }
+        private bool CPPCError()
+        {
+            Console.WriteLine("You are adding affinity without using CPPC. " +
+                                "If you enabled CPPC, go back to the menu and press 'Find best core' then come back." +
+                                " Or you can add predetermined affinity. Press Enter for adding Predetermined affinity.");
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+            if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

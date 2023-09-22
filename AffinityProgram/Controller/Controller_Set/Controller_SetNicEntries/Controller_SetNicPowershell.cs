@@ -1,5 +1,4 @@
 ﻿using AffinityProgram.Find_Core;
-using AffinityProgram.Model;
 using System;
 using System.Linq;
 using System.Management.Automation;

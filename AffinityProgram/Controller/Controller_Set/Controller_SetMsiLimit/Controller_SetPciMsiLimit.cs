@@ -3,11 +3,8 @@ using AffinityProgram.Queries.Concrete;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.Controller.Controller_SetMsiLimit
 {

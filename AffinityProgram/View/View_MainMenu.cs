@@ -3,17 +3,11 @@ using AffinityProgram.Controller.Controller_Del;
 using AffinityProgram.Controller.Controller_List;
 using AffinityProgram.Controller.Controller_Rem;
 using AffinityProgram.Controller.Controller_Set;
-using AffinityProgram.Controller.Controller_Set.Controller_SetAffinity;
 using AffinityProgram.Controller.Controller_SetInterruptPriority;
 using AffinityProgram.Controller.Controller_SetMsiLimit;
-using AffinityProgram.Controller.Controller_SetNicPowershell;
 using AffinityProgram.Controller.Controller_SetNicRegistry;
 using AffinityProgram.Find_Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AffinityProgram.View
 {
