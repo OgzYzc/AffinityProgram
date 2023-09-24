@@ -12,8 +12,8 @@ namespace AffinityProgram.Find_Core
     {
         public static byte[] GPUhexBytes;
         public static byte[] USBhexBytes;
-        static int processorCount;
-        static bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
+        private static int processorCount;
+        private static readonly bool IsSmtEnabled = View.MainMenu.isSmtEnabled;
 
         public static int[] selectedCoreNIC;
         public void FindCoreCPPC()
@@ -76,7 +76,7 @@ namespace AffinityProgram.Find_Core
 
                 //Take the processor number in order to a list
                 List<byte[]> preferredCoreList = new List<byte[]>();
-                foreach (var item in maxPerformanceProcessorList.Select(pair => pair.processorNumber))
+                foreach (string item in maxPerformanceProcessorList.Select(pair => pair.processorNumber))
                 {
                     byte processorNumber = byte.Parse(item);
                     preferredCoreList.Add(new byte[] { processorNumber });
@@ -88,9 +88,9 @@ namespace AffinityProgram.Find_Core
                 int[] tempCoreList = new int[maxPerformanceProcessorList.Count];
                 int index = 0;
 
-                foreach (var item in preferredCoreList)
+                foreach (byte[] item in preferredCoreList)
                 {
-                    foreach (var squareCore in item)
+                    foreach (byte squareCore in item)
                     {
                         coreNumber = 1 << squareCore;
                         tempCoreList[index] = coreNumber;
@@ -189,9 +189,9 @@ namespace AffinityProgram.Find_Core
 
                 Model_NicDevices model_NicDevices = new Model_NicDevices(NicArray: selectedCoreNIC);
 
-                foreach (var coreGPU in selectCoreGPU) { Console.WriteLine("Selected processor for GPU:Processor {0}", Math.Log(coreGPU, 2)); }
-                foreach (var coreUSB in selectCoreUSB) { Console.WriteLine("Selected processor for USB:Processor {0}", Math.Log(coreUSB, 2)); }
-                foreach (var coreUSB in selectCoreUSB) { Console.WriteLine("Selected processor for NIC:Processor {0}", Math.Log(selectedCoreNIC[0], 2)); }
+                foreach (int coreGPU in selectCoreGPU) { Console.WriteLine("Selected processor for GPU:Processor {0}", Math.Log(coreGPU, 2)); }
+                foreach (int coreUSB in selectCoreUSB) { Console.WriteLine("Selected processor for USB:Processor {0}", Math.Log(coreUSB, 2)); }
+                foreach (int coreUSB in selectCoreUSB) { Console.WriteLine("Selected processor for NIC:Processor {0}", Math.Log(selectedCoreNIC[0], 2)); }
 
                 // Prompt user to exit the program
                 Console.WriteLine("\n" + "Press any key to return menu...");

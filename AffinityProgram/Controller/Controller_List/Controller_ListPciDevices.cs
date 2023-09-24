@@ -8,9 +8,9 @@ namespace AffinityProgram.Controller.Controller_List
     {
         public Controller_ListPciDevices()
         {
-            var deviceInfo = new Query_PciDevices();
-            var devices = deviceInfo.GetDevices<Model_PciDevices>();
-            foreach (var device in devices)
+            Query_PciDevices deviceInfo = new Query_PciDevices();
+            System.Collections.Generic.List<Model_PciDevices> devices = deviceInfo.GetDevices<Model_PciDevices>();
+            foreach (Model_PciDevices device in devices)
             {
                 Console.WriteLine(device.DeviceID);
             }

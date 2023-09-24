@@ -13,19 +13,19 @@ namespace AffinityProgram.Controller.Controller_Rem
         {
             try
             {
-                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
+                Model_RegistryPath registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
-                var regSecurity = CreateRegistrySecurity();
+                RegistrySecurity regSecurity = CreateRegistrySecurity();
 
                 Controller_ListPciBridges controller_SetPciBridgeAffinity = new Controller_ListPciBridges();
                 controller_SetPciBridgeAffinity.SetPciBridgeAffinity();
 
-                foreach (var device in Controller_ListPciBridges.PciBridgeList)
+                foreach (Model_PciBridgeDevices device in Controller_ListPciBridges.PciBridgeList)
                 {
                     if (!string.IsNullOrEmpty(device.ToString()))
                     {
-                        var keyPath = registryPath.RegistryPath.Replace("$i", device.ToString());
-                        using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                        string keyPath = registryPath.RegistryPath.Replace("$i", device.ToString());
+                        using (RegistryKey key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
                             key.DeleteValue("AssignmentSetOverride");
                             key.DeleteValue("DevicePolicy");
@@ -41,7 +41,7 @@ namespace AffinityProgram.Controller.Controller_Rem
         }
         private RegistrySecurity CreateRegistrySecurity()
         {
-            var regSecurity = new RegistrySecurity();
+            RegistrySecurity regSecurity = new RegistrySecurity();
             regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
             return regSecurity;
         }

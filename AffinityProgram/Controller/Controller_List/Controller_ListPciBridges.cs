@@ -9,8 +9,7 @@ namespace AffinityProgram.Controller.Controller_Set.Controller_SetAffinity
 {
     internal class Controller_ListPciBridges
     {
-
-        const int CR_SUCCESS = 0;
+        private const int CR_SUCCESS = 0;
 
         public static List<Model_PciBridgeDevices> PciBridgeList = new List<Model_PciBridgeDevices>();
 
@@ -24,12 +23,12 @@ namespace AffinityProgram.Controller.Controller_Set.Controller_SetAffinity
         [DllImport("cfgmgr32.dll", CharSet = CharSet.Auto)]
         private static extern int CM_Get_Parent(out IntPtr pdnDevInst, IntPtr dnDevInst, int ulFlags);
 
-        static string deviceInfoFromModel;
+        private static string deviceInfoFromModel;
         public void SetPciBridgeAffinity()
         {
             deviceInfoFromModel = GetDeviceInfoFromModel();
 
-            if (CM_Locate_DevNode(out var rootNode, deviceInfoFromModel, 0) != CR_SUCCESS)
+            if (CM_Locate_DevNode(out IntPtr rootNode, deviceInfoFromModel, 0) != CR_SUCCESS)
             {
                 Console.WriteLine("Failed to locate root node.");
                 return;
@@ -41,10 +40,10 @@ namespace AffinityProgram.Controller.Controller_Set.Controller_SetAffinity
         private static string GetDeviceInfoFromModel()
         {
             string deviceId = null;
-            var deviceInfo = new Query_PciDevices();
-            var devices = deviceInfo.GetDevices<Model_PciDevices>();
+            Query_PciDevices deviceInfo = new Query_PciDevices();
+            List<Model_PciDevices> devices = deviceInfo.GetDevices<Model_PciDevices>();
 
-            foreach (var dev in devices)
+            foreach (Model_PciDevices dev in devices)
             {
                 deviceId = dev.DeviceID.ToString();
             }
@@ -70,7 +69,7 @@ namespace AffinityProgram.Controller.Controller_Set.Controller_SetAffinity
                 if (!parentId.StartsWith("PCI"))
                     break;
 
-                var pciBridgeDevice = new Model_PciBridgeDevices(parentId);
+                Model_PciBridgeDevices pciBridgeDevice = new Model_PciBridgeDevices(parentId);
                 PciBridgeList.Add(pciBridgeDevice);
             }
         }

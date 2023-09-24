@@ -332,7 +332,7 @@ namespace AffinityProgram.View
         public static void CheckCPU()
         {
             //Physical core count
-            foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
+            foreach (System.Management.ManagementBaseObject item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
             {
                 physicalCoreCount = int.Parse(item["NumberOfCores"].ToString());
             }
@@ -341,7 +341,7 @@ namespace AffinityProgram.View
 
 
             //Thread count
-            foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_Processor").Get())
+            foreach (System.Management.ManagementBaseObject item in new System.Management.ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_Processor").Get())
             {
                 logicalCoreCount = int.Parse(item["NumberOfLogicalProcessors"].ToString());
             }

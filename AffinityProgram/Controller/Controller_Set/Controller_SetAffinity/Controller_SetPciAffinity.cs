@@ -20,20 +20,20 @@ namespace AffinityProgram.Controller.Controller_Set
                 try
                 {
 
-                    var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
+                    Model_RegistryPath registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
-                    var devices = GetPciDevices();
+                    List<Model_PciDevices> devices = GetPciDevices();
 
-                    var regSecurity = CreateRegistrySecurity();
+                    RegistrySecurity regSecurity = CreateRegistrySecurity();
 
-                    foreach (var device in devices)
+                    foreach (Model_PciDevices device in devices)
                     {
                         if (string.IsNullOrEmpty(device.DeviceID))
                             continue;
 
-                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
+                        string keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
 
-                        using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                        using (RegistryKey key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
                             if (Find_Core_CPPC.GPUhexBytes == null)
                             {
@@ -76,14 +76,14 @@ namespace AffinityProgram.Controller.Controller_Set
 
         private List<Model_PciDevices> GetPciDevices()
         {
-            var deviceInfo = new Query_PciDevices();
+            Query_PciDevices deviceInfo = new Query_PciDevices();
             return deviceInfo.GetDevices<Model_PciDevices>();
         }
 
 
         private RegistrySecurity CreateRegistrySecurity()
         {
-            var regSecurity = new RegistrySecurity();
+            RegistrySecurity regSecurity = new RegistrySecurity();
             regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
             return regSecurity;
         }
@@ -103,11 +103,11 @@ namespace AffinityProgram.Controller.Controller_Set
 
             byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 64 } : new byte[] { 16 };
 
-            foreach (var item in Controller_ListPciBridges.PciBridgeList)
+            foreach (Model_PciBridgeDevices item in Controller_ListPciBridges.PciBridgeList)
             {
-                var keyPath = registryPath.RegistryPath.Replace("$i", item.ToString());
+                string keyPath = registryPath.RegistryPath.Replace("$i", item.ToString());
 
-                using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                using (RegistryKey key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                 {
                     key.SetValue("AssignmentSetOverride", assignmentSetOverrideValue, RegistryValueKind.Binary);
                     key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);

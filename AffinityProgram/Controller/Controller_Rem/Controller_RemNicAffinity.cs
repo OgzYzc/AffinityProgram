@@ -14,18 +14,18 @@ namespace AffinityProgram.Controller.Controller_Del
         {
             try
             {
-                var registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
+                Model_RegistryPath registryPath = new Model_RegistryPath(@"SYSTEM\CurrentControlSet\Enum\$i\Device Parameters\Interrupt Management\Affinity Policy");
 
-                var devices = GetNicDevices();
+                List<Model_NicDevices> devices = GetNicDevices();
 
-                var regSecurity = CreateRegistrySecurity();
+                RegistrySecurity regSecurity = CreateRegistrySecurity();
 
-                foreach (var device in devices)
+                foreach (Model_NicDevices device in devices)
                 {
                     if (!string.IsNullOrEmpty(device.DeviceID))
                     {
-                        var keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
-                        using (var key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
+                        string keyPath = registryPath.RegistryPath.Replace("$i", device.DeviceID);
+                        using (RegistryKey key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, regSecurity))
                         {
                             key.DeleteValue("DevicePolicy");
                             Console.WriteLine("Affinity removed.");
@@ -40,14 +40,14 @@ namespace AffinityProgram.Controller.Controller_Del
         }
         private List<Model_NicDevices> GetNicDevices()
         {
-            var deviceInfo = new Query_NicDevices();
+            Query_NicDevices deviceInfo = new Query_NicDevices();
             return deviceInfo.GetDevices<Model_NicDevices>();
         }
 
 
         private RegistrySecurity CreateRegistrySecurity()
         {
-            var regSecurity = new RegistrySecurity();
+            RegistrySecurity regSecurity = new RegistrySecurity();
             regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
             return regSecurity;
         }

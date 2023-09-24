@@ -17,11 +17,11 @@ namespace AffinityProgram.Queries.Abstract
 
         public List<T> GetDevices<T>()
         {
-            var devices = new List<T>();
+            List<T> devices = new List<T>();
 
-            using (var searcher = new ManagementObjectSearcher(Query))
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(Query))
             {
-                foreach (var obj in searcher.Get())
+                foreach (ManagementBaseObject obj in searcher.Get())
                 {
                     switch (Query)
                     {

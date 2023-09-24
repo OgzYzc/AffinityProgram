@@ -8,9 +8,9 @@ namespace AffinityProgram.Controller.Controller_List
     {
         public Controller_ListUsbDevices()
         {
-            var deviceInfo = new Query_UsbDevices();
-            var devices = deviceInfo.GetDevices<Model_UsbDevices>();
-            foreach (var device in devices)
+            Query_UsbDevices deviceInfo = new Query_UsbDevices();
+            System.Collections.Generic.List<Model_UsbDevices> devices = deviceInfo.GetDevices<Model_UsbDevices>();
+            foreach (Model_UsbDevices device in devices)
             {
                 if (!String.IsNullOrEmpty(device.DeviceID))
                 {

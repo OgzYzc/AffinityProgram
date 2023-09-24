@@ -43,7 +43,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         private RegistrySecurity GetRegistrySecurity()
         {
-            var regSecurity = new RegistrySecurity();
+            RegistrySecurity regSecurity = new RegistrySecurity();
             regSecurity.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null),
                 RegistryRights.FullControl, InheritanceFlags.None, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
             return regSecurity;
@@ -51,7 +51,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         private void setNdisKeyValues()
         {
-            using (var ndisKey = Registry.LocalMachine.CreateSubKey(ndisRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, GetRegistrySecurity()))
+            using (RegistryKey ndisKey = Registry.LocalMachine.CreateSubKey(ndisRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, GetRegistrySecurity()))
             {
                 if (Find_Core_CPPC.selectedCoreNIC == null)
                 {
@@ -60,7 +60,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 }
                 else
                 {
-                    var selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
+                    double selectedCore = Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
                     ndisKey.SetValue("RssBaseCpu", selectedCore, RegistryValueKind.DWord);
                 }
 
@@ -73,7 +73,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         private void setTcpipKeyValues()
         {
-            using (var tcpipKey = Registry.LocalMachine.CreateSubKey(tcpipRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, GetRegistrySecurity()))
+            using (RegistryKey tcpipKey = Registry.LocalMachine.CreateSubKey(tcpipRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, GetRegistrySecurity()))
             {
                 tcpipKey.SetValue("DisableTaskOffload", "0", RegistryValueKind.DWord);
             }
@@ -81,8 +81,8 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         private void setDriverKeyValues()
         {
-            var smtRssValues = new Dictionary<string, string>()
-            {             
+            Dictionary<string, string> smtRssValues = new Dictionary<string, string>()
+            {
                 { "*RSS", "1" },
                 { "*RSSProfile", "4" },
                 { "*RssBaseProcNumber", "0" },
@@ -94,8 +94,8 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 { "*RssMaxProcGroup", "0" },
             };
 
-            var nonSmtRssValues = new Dictionary<string, string>()
-            {                
+            Dictionary<string, string> nonSmtRssValues = new Dictionary<string, string>()
+            {
                 { "*RSS", "1" },
                 { "*RSSProfile", "4" },
                 { "*RssBaseProcNumber", "0" },
@@ -107,7 +107,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 { "*RssMaxProcGroup", "0" },
             };
 
-            var commonNicValues = new Dictionary<string, string>()
+            Dictionary<string, string> commonNicValues = new Dictionary<string, string>()
             {
                 //Latency
                 { "*InterruptModeration", "0" },
@@ -136,16 +136,16 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
             };
 
-            using (var driverKey = Registry.LocalMachine.CreateSubKey(adapterRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, GetRegistrySecurity()))
+            using (RegistryKey driverKey = Registry.LocalMachine.CreateSubKey(adapterRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, GetRegistrySecurity()))
             {
-                foreach (var entry in commonNicValues)
+                foreach (KeyValuePair<string, string> entry in commonNicValues)
                 {
                     driverKey.SetValue(entry.Key, entry.Value, RegistryValueKind.String);
 
                     //Add Rss values depending on SMT
-                    var selectedRssValues = View.MainMenu.isSmtEnabled ? nonSmtRssValues : smtRssValues;
-                    foreach (var value in selectedRssValues)
-                        driverKey.SetValue(value.Key,value.Value, RegistryValueKind.String);
+                    Dictionary<string, string> selectedRssValues = View.MainMenu.isSmtEnabled ? nonSmtRssValues : smtRssValues;
+                    foreach (KeyValuePair<string, string> value in selectedRssValues)
+                        driverKey.SetValue(value.Key, value.Value, RegistryValueKind.String);
 
                     //Add everyport for low latency interrupt.
                     string[] lliPorts = new string[65535];

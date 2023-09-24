@@ -15,8 +15,8 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
             {
                 using (PowerShell powershell = PowerShell.Create())
                 {
-                    var adapters = getAllPhysicalAdapters(powershell);
-                    foreach (var adapter in adapters)
+                    PSObject[] adapters = getAllPhysicalAdapters(powershell);
+                    foreach (PSObject adapter in adapters)
                     {
                         processAdapter(powershell, adapter, IsSmtEnabled);
                     }
@@ -94,7 +94,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
 
         private static void selectedAffinity(PowerShell powershell, string adapterName)
         {
-            var selectedCore = (int)Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
+            int selectedCore = (int)Math.Log(Find_Core_CPPC.selectedCoreNIC[0], 2);
             bindBaseProcessor(powershell, adapterName, selectedCore);
             setMaxProcessors(powershell, adapterName, selectedCore + 1);
         }
@@ -123,7 +123,7 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
         {
             powershell.Commands.Clear();
             powershell.AddScript($"Get-NetAdapter | Where-Object {{ $_.Name -eq '{adapterName}' -and $_.Status -eq 'Up' }}");
-            var checkResults = powershell.Invoke();
+            System.Collections.ObjectModel.Collection<PSObject> checkResults = powershell.Invoke();
 
             if (checkResults.Count > 0)
             {

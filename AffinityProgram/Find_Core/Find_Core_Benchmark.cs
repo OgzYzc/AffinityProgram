@@ -15,7 +15,7 @@ namespace AffinityProgram.Benchmark
             // Check the number of physical cores on the CPU
             int coreCount = 0;
 
-            foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
+            foreach (System.Management.ManagementBaseObject item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
             {
                 coreCount += int.Parse(item["NumberOfCores"].ToString());
             }
@@ -51,10 +51,10 @@ namespace AffinityProgram.Benchmark
                     for (int k = 0; k < 5; k++)
                     {
                         Console.Write($"Core {i + 1}, Iteration {k + 1}: ");
-                        var stopwatch = Stopwatch.StartNew();
+                        Stopwatch stopwatch = Stopwatch.StartNew();
                         results[i] = mathOperation(2.0, i + 1);
                         stopwatch.Stop();
-                        var elapsedMs = stopwatch.Elapsed.TotalMilliseconds;
+                        double elapsedMs = stopwatch.Elapsed.TotalMilliseconds;
                         runTime += elapsedMs;
                         Console.WriteLine($"{elapsedMs}ms");
                     }
