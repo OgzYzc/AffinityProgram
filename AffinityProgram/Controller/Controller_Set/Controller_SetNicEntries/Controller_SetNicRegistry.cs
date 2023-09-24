@@ -55,7 +55,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             {
                 if (Find_Core_CPPC.selectedCoreNIC == null)
                 {
-                    ndisKey.SetValue("RssBaseCpu", View.MainMenu.isSmtEnabled ? "4" : "0", RegistryValueKind.DWord);
+                    ndisKey.SetValue("RssBaseCpu", View.MainMenu.isSmtEnabled ? "2" : "0", RegistryValueKind.DWord);
 
                 }
                 else
@@ -81,19 +81,34 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         private void setDriverKeyValues()
         {
-            var nicValues = new Dictionary<string, string>()
-        {
-                //RSS                
+            var smtRssValues = new Dictionary<string, string>()
+            {             
                 { "*RSS", "1" },
                 { "*RSSProfile", "4" },
                 { "*RssBaseProcNumber", "0" },
-                { "*MaxRssProcessors", "12" },
+                { "*MaxRssProcessors", "4" },
                 { "*NumaNodeId", "0" },
                 { "*NumRssQueues", "4" },
                 { "*RssBaseProcGroup", "0" },
-                { "*RssMaxProcNumber", "12" },
+                { "*RssMaxProcNumber", "4" },
                 { "*RssMaxProcGroup", "0" },
+            };
 
+            var nonSmtRssValues = new Dictionary<string, string>()
+            {                
+                { "*RSS", "1" },
+                { "*RSSProfile", "4" },
+                { "*RssBaseProcNumber", "0" },
+                { "*MaxRssProcessors", "2" },
+                { "*NumaNodeId", "0" },
+                { "*NumRssQueues", "2" },
+                { "*RssBaseProcGroup", "0" },
+                { "*RssMaxProcNumber", "2" },
+                { "*RssMaxProcGroup", "0" },
+            };
+
+            var commonNicValues = new Dictionary<string, string>()
+            {
                 //Latency
                 { "*InterruptModeration", "0" },
                 { "ITR", "0" },
@@ -119,13 +134,18 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 { "RxAbsIntDelay", "0" },
                 { "TxAbsIntDelay", "0" },
 
-        };
+            };
 
             using (var driverKey = Registry.LocalMachine.CreateSubKey(adapterRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, GetRegistrySecurity()))
             {
-                foreach (var entry in nicValues)
+                foreach (var entry in commonNicValues)
                 {
                     driverKey.SetValue(entry.Key, entry.Value, RegistryValueKind.String);
+
+                    //Add Rss values depending on SMT
+                    var selectedRssValues = View.MainMenu.isSmtEnabled ? nonSmtRssValues : smtRssValues;
+                    foreach (var value in selectedRssValues)
+                        driverKey.SetValue(value.Key,value.Value, RegistryValueKind.String);
 
                     //Add everyport for low latency interrupt.
                     string[] lliPorts = new string[65535];
@@ -136,9 +156,6 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
                     driverKey.SetValue("LLIPorts", lliPorts, RegistryValueKind.MultiString);
                 }
-
-
-
             }
 
             // Set the value in the registry            

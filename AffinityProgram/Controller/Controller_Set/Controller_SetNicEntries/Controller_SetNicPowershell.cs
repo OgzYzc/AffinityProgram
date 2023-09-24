@@ -84,8 +84,8 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
             if (Console.ReadKey(true).Key == ConsoleKey.Enter)
             {
                 Console.Clear();
-                int baseProcessor = IsSmtEnabled ? 4 : 0;
-                int maxProcessor = IsSmtEnabled ? 6 : 4;
+                int baseProcessor = IsSmtEnabled ? 2 : 0;
+                int maxProcessor = IsSmtEnabled ? 4 : 4;
 
                 bindBaseProcessor(powershell, adapterName, baseProcessor);
                 setMaxProcessors(powershell, adapterName, maxProcessor);
