@@ -17,8 +17,8 @@ namespace AffinityProgram.View
         public static void Run()
         {
             //Disable scroll bar
-            //Console.WindowHeight = 30;
-            //Console.BufferHeight = Console.WindowHeight;
+            Console.WindowHeight = 30;
+            Console.BufferHeight = Console.WindowHeight;
 
             //Check physical and logical core count and SMT
             CheckCPU();
