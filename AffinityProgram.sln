@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AffinityProgram", "AffinityProgram\AffinityProgram.csproj", "{2B0C8FB3-8BDE-412D-AEBE-898C94C04F21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddDSCP", "AddDSCP\AddDSCP.csproj", "{111F994D-EFB6-4113-BC2B-C5CF9724B689}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2B0C8FB3-8BDE-412D-AEBE-898C94C04F21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B0C8FB3-8BDE-412D-AEBE-898C94C04F21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B0C8FB3-8BDE-412D-AEBE-898C94C04F21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{111F994D-EFB6-4113-BC2B-C5CF9724B689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{111F994D-EFB6-4113-BC2B-C5CF9724B689}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{111F994D-EFB6-4113-BC2B-C5CF9724B689}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{111F994D-EFB6-4113-BC2B-C5CF9724B689}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

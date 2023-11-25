@@ -128,11 +128,17 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
             if (checkResults.Count > 0)
             {
                 Console.WriteLine($"Adapter '{adapterName}' restarted successfully.\nYou can go back now.");
+
+
             }
             else
             {
                 Console.WriteLine($"Failed to restart adapter '{adapterName}'.\nGo back and try again.");
             }
+
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
         }
     }
 }

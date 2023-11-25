@@ -8,6 +8,8 @@ using AffinityProgram.Controller.Controller_SetMsiLimit;
 using AffinityProgram.Controller.Controller_SetNicRegistry;
 using AffinityProgram.Find_Core;
 using System;
+using System.Runtime.InteropServices;
+using AddDSCP;
 
 namespace AffinityProgram.View
 {
@@ -36,6 +38,7 @@ namespace AffinityProgram.View
                 "PCI",
                 "USB",
                 "Find best core",
+                "Add DSCP",
             };
 
             //There may be a better way to do this but I CANNOT care anymore
@@ -76,10 +79,8 @@ namespace AffinityProgram.View
             // Make the first option of main menu selected as default
             int selectedIndex = 0;
             int previousSelectedIndex = -1;
-
             while (true)
             {
-
                 // Determine which options to display based on whether we're in the main menu or the submenu
                 string[] displayOptions = mainOptions;
 
@@ -104,7 +105,6 @@ namespace AffinityProgram.View
                 // Display the menu options
                 for (int i = 0; i < displayOptions.Length; i++)
                 {
-
                     // Set colors
                     ConsoleColor foregroundColor = ConsoleColor.Gray;
                     ConsoleColor backgroundColor = ConsoleColor.Black;
@@ -113,8 +113,8 @@ namespace AffinityProgram.View
                     {
                         foregroundColor = ConsoleColor.Black;
                         backgroundColor = ConsoleColor.Red;
-                    }
 
+                    }
                     // Calculate the position of the option on the console window
                     int centerY = Console.WindowHeight / 2 - displayOptions.Length / 2 + i;
                     int leftPadding = centerX - displayOptions[i].Length / 2;
@@ -128,6 +128,7 @@ namespace AffinityProgram.View
 
                 // Wait for a key to be pressed
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
 
                 // Handle the key press
                 switch (keyInfo.Key)
@@ -256,10 +257,10 @@ namespace AffinityProgram.View
                                 }
                                 break;
                             case 3:
+                                //This controls Find core section
                                 switch (selectedIndex)
                                 {
                                     case 0:
-
                                         Find_Core_CPPC find_Core_CPPC = new Find_Core_CPPC();
                                         find_Core_CPPC.FindCoreCPPC();
                                         break;
@@ -269,6 +270,7 @@ namespace AffinityProgram.View
                                         break;
                                 }
                                 break;
+
                             default:
                                 // This controls the main menu
                                 switch (selectedIndex)
@@ -293,6 +295,10 @@ namespace AffinityProgram.View
                                         previousSelectedIndex = selectedIndex;
                                         selectedIndex = 0;
                                         break;
+                                    //DSCP
+                                    case 4:
+                                        AddDSCP.PathManager.Run();
+                                        break;
                                     // Handle other options
                                     default:
                                         Console.WriteLine("You selected: " + displayOptions[selectedIndex]);
@@ -308,7 +314,7 @@ namespace AffinityProgram.View
                     case ConsoleKey.Backspace:
                         Console.ResetColor();
                         Console.Clear();
-                        //Putting this here again because after clearing console screen, want to cpu info only visible on main menu
+                        //Putting this here again because cpu info should be only visible on main menu
                         CheckCPU();
                         // Go back to previous menu
                         if (previousSelectedIndex != -1)

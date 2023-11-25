@@ -76,7 +76,7 @@ namespace AffinityProgram.Controller.Controller_Set
         }
         private static void AddAffintyNoCPPC(RegistryKey key)
         {
-            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 32 } : new byte[] { 8 };
+            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 00,04 } : new byte[] { 32 };
 
             key.SetValue("AssignmentSetOverride", assignmentSetOverrideValue, RegistryValueKind.Binary);
             key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);

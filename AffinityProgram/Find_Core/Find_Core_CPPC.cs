@@ -167,10 +167,7 @@ namespace AffinityProgram.Find_Core
                             }
 
                         }
-                        break;
-                    default:
-                        Console.WriteLine("Error selecting cores for USB and GPU");
-                        break;
+                        break;                   
                 }
 
                 //Converting to array.
