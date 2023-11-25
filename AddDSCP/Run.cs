@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Security.Policy;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AddDSCP
 {
@@ -28,8 +26,8 @@ namespace AddDSCP
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }    
-        
+        }
+
         private static void CreateJSON()
         {
             Console.WriteLine("Creating a new JSON file");

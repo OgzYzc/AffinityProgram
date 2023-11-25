@@ -9,12 +9,12 @@ using System.Threading;
 namespace AffinityProgram.Controller.Controller_SetNicRegistry
 {
     internal class Controller_SetNicRegistry
-    {  
+    {
         private const string ndisRegistryPath = @"SYSTEM\CurrentControlSet\Services\NDIS\Parameters";
         private const string tcpipRegistryPath = @"SYSTEM\CurrentControlSet\Services\Tcpip";
         private const string adapterRegistryPath = @"SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\";
         private readonly string driverPath = adapterRegistryPath + GetDriverPath();
-        
+
         public Controller_SetNicRegistry()
         {
             bool continueProgram = CPPCError();
@@ -139,7 +139,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             {
                 foreach (KeyValuePair<string, string> entry in commonNicValues)
                 {
-                   
+
                     driverKey.SetValue(entry.Key, entry.Value, RegistryValueKind.String);
 
 

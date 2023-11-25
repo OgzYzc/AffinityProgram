@@ -167,7 +167,7 @@ namespace AffinityProgram.Find_Core
                             }
 
                         }
-                        break;                   
+                        break;
                 }
 
                 //Converting to array.

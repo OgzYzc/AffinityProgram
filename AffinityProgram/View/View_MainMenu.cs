@@ -8,8 +8,6 @@ using AffinityProgram.Controller.Controller_SetMsiLimit;
 using AffinityProgram.Controller.Controller_SetNicRegistry;
 using AffinityProgram.Find_Core;
 using System;
-using System.Runtime.InteropServices;
-using AddDSCP;
 
 namespace AffinityProgram.View
 {

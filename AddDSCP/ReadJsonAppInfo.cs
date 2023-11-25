@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace AddDSCP
 {
@@ -82,7 +77,7 @@ namespace AddDSCP
                             }
                             break;
 
-                        case JsonTokenType.EndObject:                            
+                        case JsonTokenType.EndObject:
                             if (isInLaunch)
                             {
                                 isInLaunch = false;
