@@ -2,65 +2,76 @@
 using System.IO;
 using System.Security.Policy;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AddDSCP
 {
     public class PathManager
     {
+        static string JSONPath = Path.Combine(Path.GetTempPath(), "appinfo.json");
         public static void Run()
         {
             try
             {
-                if (!File.Exists(Path.GetTempPath() + "appinfo.json"))
+                if (File.Exists(JSONPath))
                 {
-                    CreateJSON();
+                    File.Delete(JSONPath);
+                    Run();
                 }
                 else
                 {
-                    ReadJsonAppInfo.Read.ReadAppInfo(Path.GetTempPath() + "appinfo.json");
-                    ReadJsonLibraryFolder.Read.ReadLibraryFolder(GetSteamPath() + @"\steamapps\libraryfolders.vdf");
-
-
-                    AddDscpToRegistry.DscpReg.AddRegistry();
-
-
-                    //Adding this just for fun
-                    Random rnd = new Random();
-                    double delaySeconds = rnd.NextDouble() * 3;
-                    Console.WriteLine($"Returning to main menu in {delaySeconds} seconds.");
-
-                    int milliseconds = (int)(delaySeconds * 1000);
-                    int fractionalMilliseconds = (int)((delaySeconds - Math.Floor(delaySeconds)) * 1000);
-
-                    Thread.Sleep(milliseconds + fractionalMilliseconds);
-
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
+                    CreateJSON();
                 }
+
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-        }
-        static void CreateJSON()
+        }    
+        
+        private static void CreateJSON()
         {
-            Console.WriteLine("Creating a new JSON ile");
+            Console.WriteLine("Creating a new JSON file");
             Thread.Sleep(1500);
-
-            using (VDFConverter vdfReader = new VDFConverter(GetSteamPath() + "/appcache/appinfo.vdf"))
+            Console.Clear();
+            //if json is still exists delete it
+            if (File.Exists(JSONPath))
             {
-                vdfReader.Transform();
+                File.Delete(JSONPath);
             }
+            else
+            {
+                using (VDFConverter vdfReader = new VDFConverter(Path.Combine(GetSteamPath(), "appcache", "appinfo.vdf")))
+                {
+                    vdfReader.Transform();
+                }
+            }
+            ExitMethod();
         }
+        private static void ExitMethod()
+        {
+            Console.Clear();
 
+            Console.WriteLine("DSCP values added succesfully.");
+            // Adding this just for fun
+            Random rnd = new Random();
+            double delaySeconds = rnd.NextDouble() * 3;
+            Console.WriteLine($"Returning to the main menu in {delaySeconds} seconds.");
+
+            int milliseconds = (int)(delaySeconds * 1000);
+            int fractionalMilliseconds = (int)((delaySeconds - Math.Floor(delaySeconds)) * 1000);
+
+            Thread.Sleep(milliseconds + fractionalMilliseconds);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
         public static string GetSteamPath()
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Valve\Steam");
+                var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(Path.Combine("SOFTWARE", "Valve", "Steam"));
 
                 if (key != null)
                 {
@@ -68,6 +79,7 @@ namespace AddDSCP
 
                     if (steamPath != null)
                     {
+                        key.Close();
                         return steamPath.ToString();
                     }
                     else

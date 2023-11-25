@@ -30,6 +30,7 @@ namespace AddDSCP
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
+                AddDscpToRegistry.DscpReg.AddRegistry();
             }
             private static void GetFolderNames(string path)
             {
@@ -65,6 +66,7 @@ namespace AddDSCP
                 {
                     Console.WriteLine("An error occurred: " + ex.Message);
                 }
+                
             }
         }
     }

@@ -43,10 +43,8 @@ namespace AddDSCP
                                 gameKey.SetValue("Remote Port", "*", RegistryValueKind.String);
                                 gameKey.SetValue("Throttle Rate", "-1", RegistryValueKind.String);
                                 gameKey.SetValue("Version", "1.0", RegistryValueKind.String);
-
                             }
                         }
-
                         UpdateGroupPolicy();
                     }
                 }
@@ -95,10 +93,10 @@ namespace AddDSCP
             {
                 Process p = new Process();
                 p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                p.StartInfo.FileName = "C:\\Windows\\system32\\cmd.exe";
+                p.StartInfo.FileName = "cmd.exe";
                 p.StartInfo.Arguments = "/C gpupdate /force";
                 p.Start();
-                p.WaitForExit(1000);
+                p.WaitForExit(0);
 
             }
         }

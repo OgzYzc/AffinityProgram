@@ -15,18 +15,6 @@ namespace AddDSCP
     {
         public class Read
         {
-            /*private readonly string fileName;
-            private string installdirValue;
-            private bool isInLaunch;
-            private HashSet<string> uniqueCombinations;
-            static public HashSet<string[]> gameInstalldir;
-
-            public ReadJson(string fileName)
-            {
-                this.fileName = fileName;
-                isInLaunch = false;
-                uniqueCombinations = new HashSet<string>();
-            }*/
             private static string installdirValue;
             private static bool isInLaunch = false;
             private static HashSet<string> uniqueCombinations = new HashSet<string>();
@@ -103,8 +91,6 @@ namespace AddDSCP
                     }
                 }
 
-
-
                 bool ContainsExcludedString(string value)
                 {
                     string[] excludedStrings = {
@@ -113,8 +99,11 @@ namespace AddDSCP
                         "sdklauncher","ds","SteamWorks",
                         "bat","DO NOT USE","vbs",
                         "app","TwistedDraw","htm"};
+
                     return excludedStrings.Any(s => value.IndexOf(s, StringComparison.OrdinalIgnoreCase) != -1);
                 }
+                File.Delete(Path.Combine(Path.GetTempPath(), "appinfo.json"));
+                ReadJsonLibraryFolder.Read.ReadLibraryFolder(Path.Combine(PathManager.GetSteamPath(), "steamapps", "libraryfolders.vdf"));
 
             }
         }

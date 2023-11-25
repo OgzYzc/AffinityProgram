@@ -215,6 +215,8 @@ namespace AddDSCP
             GC.Collect();
 
             GC.SuppressFinalize(this);
+
+            ReadJsonAppInfo.Read.ReadAppInfo(Path.Combine(Path.GetTempPath(), "appinfo.json"));
         }
 
     }
