@@ -24,6 +24,8 @@ namespace AddDSCP
 
                     using (RegistryKey qosKey = Registry.LocalMachine.CreateSubKey(path, RegistryKeyPermissionCheck.ReadWriteSubTree, getRegistrySecurity()))
                     {
+                        qosKey.SetValue("Application DSCP Marking Request", "Allowed", RegistryValueKind.String);
+
                         foreach (var item in ReadJsonLibraryFolder.Read.gamePaths)
                         {
                             string gameName = GetGameNameFromPath(item);
