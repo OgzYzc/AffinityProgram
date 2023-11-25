@@ -2,6 +2,8 @@
 using System.IO;
 using System.Threading;
 
+using Microsoft.Win32.TaskScheduler;
+
 namespace AddDSCP
 {
     public class PathManager
@@ -52,6 +54,9 @@ namespace AddDSCP
             Console.Clear();
 
             Console.WriteLine("DSCP values added succesfully.");
+            
+            //Setting up a task to update group policy every boot to fix DSCP values not working
+            AddTask();
             // Adding this just for fun
             Random rnd = new Random();
             double delaySeconds = rnd.NextDouble() * 3;
@@ -61,9 +66,32 @@ namespace AddDSCP
             int fractionalMilliseconds = (int)((delaySeconds - Math.Floor(delaySeconds)) * 1000);
 
             Thread.Sleep(milliseconds + fractionalMilliseconds);
-
+            
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+        private static void AddTask()
+        {
+            using (TaskService taskService = new TaskService())
+            {
+                TaskDefinition taskDefinition = taskService.NewTask();
+
+                taskDefinition.Actions.Add(new ExecAction(@"C:\Windows\System32\gpupdate.exe", "/force /wait:0", null));
+
+                taskDefinition.Triggers.Add(new LogonTrigger());
+
+                taskService.RootFolder.RegisterTaskDefinition(
+                    "GPUpdateTask",
+                    taskDefinition,
+                    TaskCreation.CreateOrUpdate,
+                    "SYSTEM"                  
+                );
+                taskService.Dispose();
+            }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Console.WriteLine("Task added successfully.");
         }
         public static string GetSteamPath()
         {
