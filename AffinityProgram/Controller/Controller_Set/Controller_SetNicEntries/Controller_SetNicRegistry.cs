@@ -73,9 +73,11 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
         private void setTcpipKeyValues()
         {
+
             using (RegistryKey tcpipKey = Registry.LocalMachine.CreateSubKey(tcpipRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree, getRegistrySecurity()))
             {
                 tcpipKey.SetValue("DisableTaskOffload", "0", RegistryValueKind.DWord);
+                tcpipKey.SetValue("SackOpts", "0", RegistryValueKind.DWord);
             }
         }
 
@@ -84,7 +86,8 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             Dictionary<string, string> smtRssValues = new Dictionary<string, string>()
             {
                 { "*RSS", "1" },
-                { "*RSSProfile", "4" },
+                //Using profile "Conservative" for less interrupt to CPU
+                { "*RSSProfile", "5" },
                 { "*RssBaseProcNumber", "0" },
                 { "*MaxRssProcessors", "4" },
                 { "*NumaNodeId", "0" },
@@ -97,7 +100,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             Dictionary<string, string> nonSmtRssValues = new Dictionary<string, string>()
             {
                 { "*RSS", "1" },
-                { "*RSSProfile", "4" },
+                { "*RSSProfile", "5" },
                 { "*RssBaseProcNumber", "2" },
                 { "*MaxRssProcessors", "2" },
                 { "*NumaNodeId", "0" },
@@ -110,14 +113,14 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             Dictionary<string, string> commonNicValues = new Dictionary<string, string>()
             {
                 //Latency
-                { "*InterruptModeration", "1" },
-                { "ITR", "125" },
+                { "*InterruptModeration", "0" },
+                { "ITR", "0" },
                 { "*LsoV1IPv4", "0" },
                 { "*LsoV2IPv4", "0" },
                 { "*LsoV1IPv6", "0" },
                 { "*LsoV2IPv6", "0" },
                 { "*FlowControl", "0" },
-                { "TxIntDelay", "8" },
+                { "TxIntDelay", "0" },
                 { "EnableDCA", "1" },
                 { "DMACoalescing", "0" },
                 { "*TransmitBuffers", "1600" },
@@ -150,8 +153,6 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
 
                 }
             }
-
-            // Set the value in the registry            
 
             Console.WriteLine("Driver values are added.");
         }

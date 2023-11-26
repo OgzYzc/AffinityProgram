@@ -58,6 +58,10 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                 restartAdapter(powershell, adapterName);
 
                 verifyAdapterStatus(powershell, adapterName);
+
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.SuppressFinalize(powershell);
             }
             catch (Exception ex)
             {
@@ -77,19 +81,13 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
 
         private static void predeterminedAffinity(PowerShell powershell, string adapterName, bool IsSmtEnabled)
         {
-            Console.WriteLine("You are adding affinity without using CPPC. " +
-                "If you enabled CPPC go back to menu and press 'Find best core' then come back." +
-                "Or you can add predetermined affinity. Press Enter for adding Predetermined affinity.");
 
-            if (Console.ReadKey(true).Key == ConsoleKey.Enter)
-            {
-                Console.Clear();
-                int baseProcessor = IsSmtEnabled ? 2 : 0;
-                int maxProcessor = IsSmtEnabled ? 4 : 4;
+            int baseProcessor = IsSmtEnabled ? 2 : 2;
+            int maxProcessor = IsSmtEnabled ? 4 : 3;
 
-                bindBaseProcessor(powershell, adapterName, baseProcessor);
-                setMaxProcessors(powershell, adapterName, maxProcessor);
-            }
+            bindBaseProcessor(powershell, adapterName, baseProcessor);
+            setMaxProcessors(powershell, adapterName, maxProcessor);
+
         }
 
         private static void selectedAffinity(PowerShell powershell, string adapterName)
@@ -135,10 +133,6 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
             {
                 Console.WriteLine($"Failed to restart adapter '{adapterName}'.\nGo back and try again.");
             }
-
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
         }
     }
 }
