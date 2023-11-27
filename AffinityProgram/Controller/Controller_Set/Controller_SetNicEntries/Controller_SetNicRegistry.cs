@@ -55,7 +55,7 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             {
                 if (Find_Core_CPPC.selectedCoreNIC == null)
                 {
-                    ndisKey.SetValue("RssBaseCpu", View.MainMenu.isSmtEnabled ? "2" : "2", RegistryValueKind.DWord);
+                    ndisKey.SetValue("RssBaseCpu", View.MainMenu.isSmtEnabled ? "4" : "2", RegistryValueKind.DWord);
 
                 }
                 else
@@ -88,12 +88,12 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
                 { "*RSS", "1" },
                 //Using profile "Conservative" for less interrupt to CPU
                 { "*RSSProfile", "5" },
-                { "*RssBaseProcNumber", "0" },
-                { "*MaxRssProcessors", "4" },
+                { "*RssBaseProcNumber", "4" },
+                { "*MaxRssProcessors", "2" },
                 { "*NumaNodeId", "0" },
-                { "*NumRssQueues", "4" },
+                { "*NumRssQueues", "2" },
                 { "*RssBaseProcGroup", "0" },
-                { "*RssMaxProcNumber", "4" },
+                { "*RssMaxProcNumber", "6" },
                 { "*RssMaxProcGroup", "0" },
             };
 
@@ -113,23 +113,24 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             Dictionary<string, string> commonNicValues = new Dictionary<string, string>()
             {
                 //Latency
+                { "*EEE", "0" },
+                { "*FlowControl", "0" },
                 { "*InterruptModeration", "0" },
-                { "ITR", "0" },
                 { "*LsoV1IPv4", "0" },
                 { "*LsoV2IPv4", "0" },
                 { "*LsoV1IPv6", "0" },
                 { "*LsoV2IPv6", "0" },
-                { "*FlowControl", "0" },
-                { "TxIntDelay", "0" },
-                { "EnableDCA", "1" },
-                { "DMACoalescing", "0" },
-                { "*TransmitBuffers", "1600" },
+                { "*PMNSOffload", "0" },
+                { "*PMARPOffload", "0" },
                 { "*ReceiveBuffers", "1600" },
+                { "*TransmitBuffers", "1600" },
+                { "DMACoalescing", "0" },
+                { "EnableLLI", "2" }, //TCP PSH flag
+                { "EnableDCA", "1" },
                 { "EnableModernStandby", "0" },
                 { "EnablePME", "0" },
-                { "*PMNSOffload", "0" },
-                { "*PMARPOffload", "0" },                
-
+                { "ITR", "0" },
+                { "TxIntDelay", "0" },
                 //These ones are listed in intel linux driver documentation. Not sure it works.
                 //downloadmirror.intel.com/15817/eng/readme.txt
                 { "RxIntDelay", "0" },
@@ -142,12 +143,11 @@ namespace AffinityProgram.Controller.Controller_SetNicRegistry
             {
                 foreach (KeyValuePair<string, string> entry in commonNicValues)
                 {
-
                     driverKey.SetValue(entry.Key, entry.Value, RegistryValueKind.String);
-
 
                     //Add Rss values depending on SMT
                     Dictionary<string, string> selectedRssValues = View.MainMenu.isSmtEnabled ? smtRssValues : nonSmtRssValues;
+
                     foreach (KeyValuePair<string, string> value in selectedRssValues)
                         driverKey.SetValue(value.Key, value.Value, RegistryValueKind.String);
 

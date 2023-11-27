@@ -20,7 +20,9 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                     {
                         processAdapter(powershell, adapter, IsSmtEnabled);
                     }
-                }
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                }               
             }
             catch (Exception ex)
             {
@@ -54,14 +56,11 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
                 }
 
                 restartAdapter(powershell, adapterName);
-                setMaxProcessors(powershell, adapterName, 4);
+                setMaxProcessors(powershell, adapterName, 2);
                 restartAdapter(powershell, adapterName);
 
                 verifyAdapterStatus(powershell, adapterName);
-
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                GC.SuppressFinalize(powershell);
+                
             }
             catch (Exception ex)
             {
@@ -82,8 +81,8 @@ namespace AffinityProgram.Controller.Controller_SetNicPowershell
         private static void predeterminedAffinity(PowerShell powershell, string adapterName, bool IsSmtEnabled)
         {
 
-            int baseProcessor = IsSmtEnabled ? 2 : 2;
-            int maxProcessor = IsSmtEnabled ? 4 : 3;
+            int baseProcessor = IsSmtEnabled ? 4 : 2;
+            int maxProcessor = IsSmtEnabled ? 2 : 2;
 
             bindBaseProcessor(powershell, adapterName, baseProcessor);
             setMaxProcessors(powershell, adapterName, maxProcessor);

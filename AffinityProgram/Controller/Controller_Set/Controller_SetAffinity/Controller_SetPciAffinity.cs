@@ -89,7 +89,7 @@ namespace AffinityProgram.Controller.Controller_Set
         }
         private static void AddAffintyNoCPPC(RegistryKey key)
         {
-            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 64 } : new byte[] { 16 };
+            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 00,01 } : new byte[] { 16 };
 
             key.SetValue("AssignmentSetOverride", assignmentSetOverrideValue, RegistryValueKind.Binary);
             key.SetValue("DevicePolicy", "4", RegistryValueKind.DWord);
@@ -101,7 +101,7 @@ namespace AffinityProgram.Controller.Controller_Set
             Controller_ListPciBridges controller_SetPciBridgeAffinity = new Controller_ListPciBridges();
             controller_SetPciBridgeAffinity.SetPciBridgeAffinity();
 
-            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 64 } : new byte[] { 16 };
+            byte[] assignmentSetOverrideValue = View.MainMenu.isSmtEnabled ? new byte[] { 00,01 } : new byte[] { 16 };
 
             foreach (Model_PciBridgeDevices item in Controller_ListPciBridges.PciBridgeList)
             {
