@@ -2,6 +2,7 @@
 using AffinitySetter.Helper.Concrete;
 using AffinitySetter.Utility.Abstract;
 using AffinitySetter.Utility.Concrete;
+using Base.Utility;
 using Base.Utility.Abstract;
 using Base.Utility.Concrete;
 using DSCPSetter.Helper.Abstract;
@@ -25,7 +26,8 @@ class Program
         Lazy<IBaseUtilityService> affinityUtility = new Lazy<IBaseUtilityService>(() => new AffinityUtilities());
         Lazy<IBaseUtilityService> messageLimitUtility = new Lazy<IBaseUtilityService>(() => new MessageLimitUtilities());
         Lazy<IBaseUtilityService> priorityUtility = new Lazy<IBaseUtilityService>(() => new PriorityUtilities());
-        Lazy<IRegistryUtilityService> registryUtility = new Lazy<IRegistryUtilityService>(() => new RegistryUtilities(processorUtility.Value));
+        Lazy<ICommandLineUtilityService> commandLineUtility = new Lazy<ICommandLineUtilityService>(() => new CommandLineUtility());
+        Lazy<IRegistryUtilityService> registryUtility = new Lazy<IRegistryUtilityService>(() => new RegistryUtilities(processorUtility.Value, commandLineUtility.Value));
 
         // Helpers 
         Lazy<AffinityHelper> affinityHelper = new Lazy<AffinityHelper>(() => new AffinityHelper(affinityUtility.Value, registryUtility.Value));
@@ -47,7 +49,7 @@ class Program
         Lazy<IFindCoreHelperService> findCoreHelperService = new Lazy<IFindCoreHelperService>(() => new FindCoreHelper(eventReaderService.Value, coreListerService.Value, coreConverterService.Value, coreSelectorService.Value));
 
         // DSCP 
-        Lazy<IDSCPMiscUtilityService> dscpMiscUtilityService = new Lazy<IDSCPMiscUtilityService>(() => new DSCPMiscUtility());
+        Lazy<IDSCPMiscUtilityService> dscpMiscUtilityService = new Lazy<IDSCPMiscUtilityService>(() => new DSCPMiscUtility(commandLineUtility.Value));
         Lazy<IPathHelperService> pathHelperService = new Lazy<IPathHelperService>(() => new PathHelper());
         Lazy<IVDFConverterUtilityService> vdfConverterUtilityService = new Lazy<IVDFConverterUtilityService>(() => new VDFConverterUtility(pathHelperService.Value));
         Lazy<IReadJsonHelperService> readJsonHelperService = new Lazy<IReadJsonHelperService>(() => new ReadJsonHelper());

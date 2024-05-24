@@ -2,6 +2,7 @@
 using AffinitySetter.Helper.Concrete;
 using AffinitySetter.Utility.Abstract;
 using Base.Constants;
+using Base.Utility;
 using Base.Utility.Abstract;
 using Microsoft.Win32;
 using System.Security.AccessControl;
@@ -12,10 +13,12 @@ namespace AffinitySetter.Utility.Concrete;
 public class RegistryUtilities : IRegistryUtilityService
 {
     private readonly IProcessorUtilityService _processorUtilityService;
+    private readonly ICommandLineUtilityService _commandLineUtilityService;
 
-    public RegistryUtilities(IProcessorUtilityService processorUtilityService)
+    public RegistryUtilities(IProcessorUtilityService processorUtilityService,ICommandLineUtilityService commandLineUtilityService)
     {
         _processorUtilityService = processorUtilityService;
+        _commandLineUtilityService = commandLineUtilityService;
     }
 
     public RegistrySecurity CreateRegistrySecurity()
@@ -41,6 +44,14 @@ public class RegistryUtilities : IRegistryUtilityService
 
             if (response == "yes" || response == "y")
             {
+                // Disable all adapter
+                string executablePath = @"C:\Windows\System32\netsh.exe";
+                string arguments = "interface set interface '*' admin=disabled";
+                string command = $"{executablePath} {arguments}";
+                _commandLineUtilityService.StartCMD(command);
+
+
+
                 Dictionary<string, string> selectedRssValues = _processorUtilityService.GetProcessorInformation().IsSMTEnabled ? new NICConfiguration().smtRssValues : new NICConfiguration().nonSmtRssValues;
                 foreach (KeyValuePair<string, string> value in selectedRssValues)
                     registryKey.SetValue(value.Key, value.Value, RegistryValueKind.String);
