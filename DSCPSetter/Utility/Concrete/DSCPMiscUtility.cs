@@ -22,17 +22,13 @@ public class DSCPMiscUtility : IDSCPMiscUtilityService
         string arguments = "/force /wait:0";
         string taskName = "GPUpdateTask";
 
-        string command = $"/C schtasks /Create /TN \"{taskName}\" /TR \"{executablePath} {arguments}\" /SC ONLOGON /ru SYSTEM";
+        string command = $"schtasks /Create /TN \"{taskName}\" /TR \"{executablePath} {arguments}\" /SC ONLOGON /ru SYSTEM";
 
         _commandLineUtilityService.StartCMD(command);
 
-        //if (process.ExitCode == 0)
-        //{
-        //    Console.WriteLine(Messages.TaskAdded);
-        //}
-        //else
-        //{
-        //    Console.WriteLine("Failed to create scheduled task. Error: " + output);
-        //}
+        Console.WriteLine(Messages.TaskAdded);
+
+
+
     }
 }

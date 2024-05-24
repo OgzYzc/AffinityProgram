@@ -43,7 +43,7 @@ public class DSCPSetterHelper : IDSCPSetterHelper,IDisposable
             RunVDFConverter();
             ReadJsonFiles();
             AddDSCPRegistrySettings();
-            //AddScheduledTask();
+            AddScheduledTask();
         }
         finally
         {
