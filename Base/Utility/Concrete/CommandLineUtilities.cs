@@ -14,21 +14,22 @@ public class CommandLineUtility : ICommandLineUtilityService
         using (Process process = new Process())
         {
             process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = command;
+            process.StartInfo.Arguments = $"/c \"{command}\"";
             process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
             process.Start();
 
-            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
             process.WaitForExit();
 
             if (process.ExitCode == 0)
             {
-                Console.WriteLine(Messages.TaskAdded);
+                Console.WriteLine("Command executed successfully:\n");
             }
             else
             {
-                Console.WriteLine("Failed to create scheduled task. Error: " + output);
+                Console.WriteLine("Command failed with error:\n" + error);
             }
         }
 
