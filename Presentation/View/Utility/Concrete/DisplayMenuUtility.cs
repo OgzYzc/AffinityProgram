@@ -5,7 +5,6 @@ using DSCPSetter.Helper.Abstract;
 using FindCore.Helper.Abstract;
 using Presentation.View.Utility.Abstract;
 using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Presentation.View.Utility.Concrete;
 internal class DisplayMenuUtility : IDisplayMenuUtilityService

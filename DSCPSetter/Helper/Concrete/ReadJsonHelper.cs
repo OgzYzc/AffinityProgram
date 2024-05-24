@@ -1,7 +1,6 @@
 ﻿using DSCPSetter.Helper.Abstract;
 using System.IO;
 using System.IO.Pipes;
-using System.Reflection.PortableExecutable;
 using System.Text.Json;
 
 namespace DSCPSetter.Helper.Concrete;

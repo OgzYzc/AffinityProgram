@@ -6,7 +6,6 @@ using DSCPSetter.Helper.Concrete;
 using DSCPSetter.Utility.Abstract;
 using Microsoft.Win32;
 using System.Security.AccessControl;
-using Windows.Devices.Geolocation;
 
 namespace DSCPSetter.Utility.Concrete;
 public class DSCPRegistryUtility : IDSCPRegistryUtilityService
