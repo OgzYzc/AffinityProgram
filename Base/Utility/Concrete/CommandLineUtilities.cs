@@ -23,11 +23,7 @@ public class CommandLineUtility : ICommandLineUtilityService
             string error = process.StandardError.ReadToEnd();
             process.WaitForExit();
 
-            if (process.ExitCode == 0)
-            {
-                Console.WriteLine("Command executed successfully:\n");
-            }
-            else
+            if (process.ExitCode != 0)
             {
                 Console.WriteLine("Command failed with error:\n" + error);
             }

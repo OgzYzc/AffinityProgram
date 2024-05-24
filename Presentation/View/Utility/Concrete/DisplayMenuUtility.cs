@@ -5,6 +5,7 @@ using DSCPSetter.Helper.Abstract;
 using FindCore.Helper.Abstract;
 using Presentation.View.Utility.Abstract;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Presentation.View.Utility.Concrete;
 internal class DisplayMenuUtility : IDisplayMenuUtilityService
@@ -17,8 +18,8 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
     private readonly PCIManager _pciManager;
     private readonly USBManager _usbManager;
 
-    static string firstOpt = null;
-    static string secondOpt = null;
+    static string? firstOpt;
+    static string? secondOpt;
 
     public DisplayMenuUtility(
         IProcessorUtilityService processorUtility,
@@ -41,6 +42,8 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
     // https://stackoverflow.com/a/46909420
     public int MenuRenderer(Dictionary<string, string[]> menu)
     {
+
+        Console.Clear();
         DisplayProcessorInformation();
 
         int startX = (Console.WindowWidth - menu.Keys.Max(k => k.Length)) / 2;      // Calculate left starting point for menu items
@@ -50,12 +53,12 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
 
         int currentSelection = 0;
 
-        menuStack.Push(menu);                                                       // Push the initial menu as main
-
+        menuStack.Push(menu);                                                       // Print the initial menu as main
 
         ConsoleKey key;
 
         List<string> options = menu.Keys.ToList();
+
         do
         {
             for (int i = 0; i < options.Capacity; i++)
@@ -73,10 +76,7 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
             key = Console.ReadKey(true).Key;
             currentSelection = ProcessUserInput(key, currentSelection, optionsPerLine, options, menu);
 
-        } while (key != ConsoleKey.Escape);
-
-
-        return currentSelection;
+        } while (true);
     }
 
     public int ProcessUserInput(ConsoleKey key, int currentSelection, int optionsPerLine, List<string> options, Dictionary<string, string[]> menu)
@@ -108,21 +108,19 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
                     break;
                 }
             case ConsoleKey.Enter:
+                // This needs to change
                 if (firstOpt == null)
                     firstOpt = options[currentSelection];
-                else if (firstOpt != null)
+                else
                 {
                     secondOpt = options[currentSelection];
                     InvokeMethod(firstOpt, secondOpt);
                     secondOpt = null;
-
                 }
                 string selectedOption = options[currentSelection];
                 if (menuStack.Peek()[selectedOption].Length > 0)            // Check if option have anything inside it         //Delete after implement everything
                     if (menu.ContainsKey(selectedOption))
-                        MenuRenderer(menu[selectedOption].ToDictionary
-                            (x => x, x => new string[] { }));               // If selected option has a submenu, render it
-
+                        MenuRenderer(menu[selectedOption].ToDictionary(x => x, x => new string[] { }));                        // If selected option has a submenu, render it
                 return currentSelection;
             case ConsoleKey.Backspace:
                 {
@@ -151,7 +149,6 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
             case "NIC":
                 {
                     return "_nicManager";
-
                 }
             case "PCI":
                 {
@@ -213,16 +210,19 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
 
         if (fieldName != "Invalid")
         {
-            FieldInfo field = typeof(DisplayMenuUtility).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo? field = typeof(DisplayMenuUtility).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (field != null)
             {
-                object instance = field.GetValue(this);
-                MethodInfo method = instance.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
+                object? instance = field.GetValue(this);
+                MethodInfo? method = instance?.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
                 if (method != null)
                 {
                     Console.Clear();
                     method.Invoke(instance, null);
+
+                    while (Console.ReadKey(true).Key != ConsoleKey.Backspace);          // Wait for user to press Backspace to print previous menu.
+                    Console.Clear();
                 }
                 else
                 {
@@ -241,7 +241,6 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
     }
     public void DisplayProcessorInformation()
     {
-        Console.Clear();
         ProcessorModel.ProcessorInfoModel processorInfo = _processorUtility.GetProcessorInformation();
 
         ConsoleColor originalColor = Console.ForegroundColor;
