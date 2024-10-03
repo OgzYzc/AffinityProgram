@@ -16,19 +16,24 @@ public class DSCPMiscUtility : IDSCPMiscUtilityService
 
     public void AddSchedule()
     {
-        // ಠ╭╮ಠ
-
         string executablePath = @"C:\Windows\System32\gpupdate.exe";
         string arguments = "/force /wait:0";
         string taskName = "GPUpdateTask";
 
-        string command = $"schtasks /Create /TN \"{taskName}\" /TR \"{executablePath} {arguments}\" /SC ONLOGON /ru SYSTEM";
+        string queryCommand = $"schtasks /Query /TN \"{taskName}\"";
 
-        _commandLineUtilityService.StartCMD(command);
+        string output = _commandLineUtilityService.StartCMD(queryCommand, captureOutput: true);
+
+        if (output.Contains(taskName))
+        {
+            Console.WriteLine($"Task '{taskName}' already exists. No action taken.");
+            return;
+        }
+
+        string createCommand = $"schtasks /Create /TN \"{taskName}\" /TR \"{executablePath} {arguments}\" /SC ONLOGON /RU SYSTEM";
+        _commandLineUtilityService.StartCMD(createCommand, true);
 
         Console.WriteLine(Messages.TaskAdded);
-
-
-
     }
+
 }

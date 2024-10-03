@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace Base.Utility;
 public interface ICommandLineUtilityService
 {
-    void StartCMD(string command);
+    string StartCMD(string command, bool captureOutput);
 }

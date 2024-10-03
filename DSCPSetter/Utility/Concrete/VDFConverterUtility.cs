@@ -1,141 +1,177 @@
-﻿//Code taken from : https://github.com/Grub4K/VDFparse
+﻿//Code taken from : https://github.com/SteamDatabase/SteamAppInfo
 using DSCPSetter.Helper.Abstract;
+using DSCPSetter.Model;
 using DSCPSetter.Utility.Abstract;
 using DSCPSetter.Utility.Concrete;
+using System.Buffers;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
+using ValveKeyValue;
 
 public class VDFConverterUtility : IDisposable, IVDFConverterUtilityService
 {
     private readonly IPathHelperService _pathHelperService;
-    public BinaryReader Reader { get; private set; }
     public Utf8JsonWriter Writer { get; private set; }
 
     private bool disposed;
+
     public VDFConverterUtility(IPathHelperService pathHelperService)
     {
         _pathHelperService = pathHelperService;
 
-        Reader = new BinaryReader(new FileStream(Path.Combine(_pathHelperService.GetSteamPath(), "appcache", "appinfo.vdf"), FileMode.Open, FileAccess.Read, FileShare.None));
         Writer = new Utf8JsonWriter(new FileStream(Path.Combine(Path.GetTempPath(), "appinfo.json"), FileMode.Create, FileAccess.Write, FileShare.None));
     }
 
-    public void Transform() => Transform(null);
+    private const uint Magic29 = 0x07_56_44_29;
+    private const uint Magic28 = 0x07_56_44_28;
+    private const uint Magic = 0x07_56_44_27;
+    public EUniverse Universe { get; set; }
 
-    public void Transform(HashSet<uint> ids)
+    //reads appcache.vdf
+    public void Read(string filename)
     {
-        var magic = Reader.ReadUInt32();
+        using var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.None);
+        Read(fs);
+    }
+    public void Read(Stream input)
+    {
+        using var reader = new BinaryReader(input);
+        var magic = reader.ReadUInt32();
 
-        var type = magic switch
+        if (magic != Magic && magic != Magic28 && magic != Magic29)
         {
-            0x07_56_44_27 => AppinfoType.AppInfoV1,
-            0x07_56_44_28 => AppinfoType.AppInfoV2,
-            _ => throw new InvalidDataException($"Unknown header: {magic:X8}"),
-        };
+            throw new InvalidDataException($"Unknown magic header: {magic:X}");
+        }
 
-        var endMarker = type switch
-        {
-            AppinfoType.AppInfoV1 or AppinfoType.AppInfoV2 => 0u,
-            _ => throw new Exception($"{nameof(type)} was checked before"),
-        };
+        Universe = (EUniverse)reader.ReadUInt32();
 
-        using (Writer)
+        var options = new KVSerializerOptions();
+
+        if (magic == Magic29)
         {
+            var stringTableOffset = reader.ReadInt64();
+            var offset = reader.BaseStream.Position;
+            reader.BaseStream.Position = stringTableOffset;
+            var stringCount = reader.ReadUInt32();
+            var stringPool = new string[stringCount];
+
+            for (var i = 0; i < stringCount; i++)
+            {
+                stringPool[i] = ReadNullTermUtf8String(reader.BaseStream);
+            }
+
+            reader.BaseStream.Position = offset;
+
+            options.StringTable = new(stringPool);
+        }
+
+        var deserializer = KVSerializer.Create(KVSerializationFormat.KeyValues1Binary);
+
+
+        Writer.WriteStartArray();
+
+        do
+        {
+            var appid = reader.ReadUInt32();
+
+            if (appid == 0)
+            {
+                break;
+            }
+
+            var size = reader.ReadUInt32(); // size until end of Data
+            var end = reader.BaseStream.Position + size;
+
+            var app = new VDFModel
+            {
+                AppID = appid,
+                InfoState = reader.ReadUInt32(),
+                LastUpdated = DateTimeFromUnixTime(reader.ReadUInt32()),
+                Token = reader.ReadUInt64(),
+                Hash = new ReadOnlyCollection<byte>(reader.ReadBytes(20)),
+                ChangeNumber = reader.ReadUInt32(),
+            };
+
+            if (magic == Magic28 || magic == Magic29)
+            {
+                app.BinaryDataHash = new ReadOnlyCollection<byte>(reader.ReadBytes(20));
+            }
+
+            app.Data = deserializer.Deserialize(input, options);
+
+            if (reader.BaseStream.Position != end)
+            {
+                throw new InvalidDataException();
+            }
+
             Writer.WriteStartObject();
-            Writer.WriteString("magic", $"0x{magic:X8}");
-            Writer.WriteString("e_universe", Encoding.UTF8.GetBytes(Reader.ReadUInt32() switch
-            {
-                0 => "invalid",
-                1 => "public",
-                2 => "beta",
-                3 => "internal",
-                4 => "dev",
-                5 => "max",
-                _ => throw new InvalidDataException("Invalid value for EUniverse"),
-            }));
+            Writer.WriteNumber("AppID", app.AppID);
+            Writer.WriteString("Name", (string)app.Data?["common"]?["name"]);
+            Writer.WriteString("installdir", (string)app.Data?["config"]?["installdir"]);
+            Writer.WriteString("executable", (string)app.Data?["config"]?["launch"]?["0"]?["executable"]);
 
 
-            Writer.WriteStartArray("datasets");
-            while (true)
+            Writer.WriteEndObject();
+        }
+        while (true);
+
+        Writer.WriteEndArray();
+
+        Writer.Flush();
+    }
+    private static DateTime DateTimeFromUnixTime(uint unixTime)
+    {
+        return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTime);
+    }
+
+    private static string ReadNullTermUtf8String(Stream stream)
+    {
+        var buffer = ArrayPool<byte>.Shared.Rent(32);
+
+        try
+        {
+            var position = 0;
+
+            do
             {
-                var id = Reader.ReadUInt32();
-                if (id == endMarker)
+                var b = stream.ReadByte();
+
+                if (b <= 0) // null byte or stream ended
                 {
                     break;
                 }
 
-                if (ids is not null && !ids.Contains(id))
+                if (position >= buffer.Length)
                 {
-                    ConsumeSingleData(type);
+                    var newBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length * 2);
+                    Buffer.BlockCopy(buffer, 0, newBuffer, 0, buffer.Length);
+                    ArrayPool<byte>.Shared.Return(buffer);
+                    buffer = newBuffer;
                 }
-                else
-                {
-                    TransformSingleData(id, type);
-                }
+
+                buffer[position++] = (byte)b;
             }
-            Writer.WriteEndArray();
+            while (true);
 
-            Writer.WriteEndObject();
-            Writer.Flush();
+            return Encoding.UTF8.GetString(buffer[..position]);
         }
-    }
-
-    private void ConsumeSingleData(AppinfoType type)
-    {
-        switch (type)
+        finally
         {
-            case AppinfoType.AppInfoV1:
-            case AppinfoType.AppInfoV2:
-                Reader.ReadBytes(Reader.ReadInt32());
-                break;
-
-            default:
-                throw new Exception($"{nameof(type)} was checked before");
+            ArrayPool<byte>.Shared.Return(buffer);
         }
-    }
-
-    private void TransformSingleData(uint id, AppinfoType type)
-    {
-        Writer.WriteStartObject();
-        Writer.WriteNumber("id", id);
-        if (type is AppinfoType.AppInfoV1 or AppinfoType.AppInfoV2)
-        {
-            Writer.WriteNumber("size", Reader.ReadUInt32());
-            Writer.WriteNumber("info_state", Reader.ReadUInt32());
-            Writer.WriteString(
-                "last_updated",
-                DateTimeOffset.FromUnixTimeSeconds(Reader.ReadUInt32()).DateTime
-            );
-            Writer.WriteNumber("token", Reader.ReadUInt64());
-        }
-
-        Writer.WriteBase64String("hash", Reader.ReadBytes(20));
-
-
-        Writer.WriteNumber("change_number", Reader.ReadUInt32());
-
-        if (type == AppinfoType.AppInfoV2)
-        {
-            Writer.WriteBase64String("vdf_hash", Reader.ReadBytes(20));
-        }
-
-        KVTransformerUtility.BinaryToJson(Reader, Writer);
-
-
-        Writer.WriteEndObject();
-    }
-
+    }    
     protected virtual void Dispose(bool disposing)
     {
-        if (!disposed)
+        if (disposed)
             return;
 
         if (disposing)
         {
-            Reader.Dispose();
+            //Reader.Dispose();
             Writer.Dispose();
         }
-        Reader = null!;
+        //Reader = null!;
         Writer = null!;
 
         disposed = true;
@@ -153,8 +189,12 @@ public class VDFConverterUtility : IDisposable, IVDFConverterUtilityService
     }
 }
 
-public enum AppinfoType
+public enum EUniverse
 {
-    AppInfoV1,
-    AppInfoV2,
+    Invalid = 0,
+    Public = 1,
+    Beta = 2,
+    Internal = 3,
+    Dev = 4,
+    Max = 5,
 }

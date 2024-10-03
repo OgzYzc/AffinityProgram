@@ -32,7 +32,7 @@ public class RegistryUtilities : IRegistryUtilityService
     {
         // Disable-Enable all adapters
         string command = $@"wmic path win32_networkadapter where 'NetEnabled={(state.ToLower() == "disable" ? "TRUE" : "FALSE")}' call {state}";
-        _commandLineUtilityService.StartCMD(command);
+        _commandLineUtilityService.StartCMD(command,true);
     }
    
     public void AdapterRegistrySettings(string keyPath, RegistryKeyPermissionCheck permissionCheck, RegistrySecurity registrySecurity)

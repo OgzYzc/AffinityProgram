@@ -18,6 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ValveKeyValue" Version="0.11.0.378" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AffinitySetter\AffinitySetter.csproj" />
     <ProjectReference Include="..\Base\Base.csproj" />
   </ItemGroup>

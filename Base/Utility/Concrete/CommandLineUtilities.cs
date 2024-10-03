@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Base.Utility.Concrete;
 public class CommandLineUtility : ICommandLineUtilityService
 {
-    public void StartCMD(string command)
+    public string StartCMD(string command, bool captureOutput = false)
     {
         using (Process process = new Process())
         {
@@ -17,9 +17,12 @@ public class CommandLineUtility : ICommandLineUtilityService
             process.StartInfo.Arguments = $"/c \"{command}\"";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardOutput = captureOutput;
             process.StartInfo.CreateNoWindow = true;
+
             process.Start();
 
+            string output = captureOutput ? process.StandardOutput.ReadToEnd() : string.Empty;
             string error = process.StandardError.ReadToEnd();
             process.WaitForExit();
 
@@ -27,8 +30,11 @@ public class CommandLineUtility : ICommandLineUtilityService
             {
                 Console.WriteLine("Command failed with error:\n" + error);
             }
+
+            return output;
         }
 
+        //Putting these here just in case
         GC.Collect();
         GC.WaitForPendingFinalizers();
     }

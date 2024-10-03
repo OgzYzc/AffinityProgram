@@ -52,7 +52,7 @@ public class DSCPSetterHelper : IDSCPSetterHelper,IDisposable
     }
     public void RunVDFConverter()
     {
-        _vdfConverterUtilityService.Transform();
+        _vdfConverterUtilityService.Read(Path.Combine(_pathHelperService.GetSteamPath(), "appcache", "appinfo.vdf"));
         _vdfConverterUtilityService.Dispose();          // Need to dispose here because of file access problem
     }
     public void ReadJsonFiles()

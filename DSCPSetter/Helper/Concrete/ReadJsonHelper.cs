@@ -20,6 +20,7 @@ public class ReadJsonHelper : IReadJsonHelperService
     {
         gameInstalldir = new HashSet<string[]>();
         Utf8JsonReader reader = new Utf8JsonReader(json);
+
         while (reader.Read())
         {
             JsonTokenType tokenType = reader.TokenType;
@@ -28,32 +29,44 @@ public class ReadJsonHelper : IReadJsonHelperService
             {
                 case JsonTokenType.PropertyName:
                     string propertyName = reader.GetString();
+
+                    // Move to the next token (value)
+                    if (!reader.Read())
+                        continue; // If there is no value, skip to the next iteration
+
                     switch (propertyName)
                     {
                         case "installdir":
-                            reader.Read();
-                            installdirValue = reader.GetString();
+                            // Check if the token is a string
+                            if (reader.TokenType == JsonTokenType.String)
+                            {
+                                installdirValue = reader.GetString();
+                            }
                             break;
                         case "executable":
-                            reader.Read();
-                            string executableValue = reader.GetString();
-                            if (executableValue.EndsWith(".exe"))
+                            // Check if the token is a string
+                            if (reader.TokenType == JsonTokenType.String)
                             {
-                                string combination = $"{installdirValue}: {executableValue}";
-                                if (!ContainsExcludedString(combination))
+                                string executableValue = reader.GetString();
+                                if (executableValue.EndsWith(".exe"))
                                 {
-                                    gameInstalldir.Add(new string[] { installdirValue, executableValue });
+                                    string combination = $"{installdirValue}: {executableValue}";
+                                    if (!ContainsExcludedString(combination))
+                                    {
+                                        gameInstalldir.Add(new string[] { installdirValue, executableValue });
+                                    }
                                 }
                             }
                             break;
                         default:
                             break;
                     }
-                    break;                    
+                    break;
             }
         }
         File.Delete(Path.Combine(Path.GetTempPath(), "appinfo.json"));
     }
+
 
     public void ReadLibraryFolder(string fileName)
     {
