@@ -12,6 +12,8 @@ public class DSCPMiscUtility : IDSCPMiscUtilityService
     public DSCPMiscUtility(ICommandLineUtilityService commandLineUtilityService)
     {
         _commandLineUtilityService = commandLineUtilityService;
+        AddMockQoS();
+        RemoveMockQoS();
     }
 
     public void AddSchedule()
@@ -35,5 +37,18 @@ public class DSCPMiscUtility : IDSCPMiscUtilityService
 
         Console.WriteLine(Messages.TaskAdded);
     }
+
+    public void AddMockQoS()
+    {
+        string createCommand = "powershell -Command \"New-NetQosPolicy -Name 'MockQoS' -AppPathNameMatchCondition '*' -IPProtocolMatchCondition Both -IPSrcPortStartMatchCondition 50000 -IPSrcPortEndMatchCondition 50019 -DSCPAction 46 -NetworkProfile All\"";
+        _commandLineUtilityService.StartCMD(createCommand, false);
+    }
+
+    public void RemoveMockQoS()
+    {
+        string createCommand = "powershell -Command \"Remove-NetQosPolicy -Name 'Teams Audio' -Confirm:$false -ErrorAction SilentlyContinue\"";
+        _commandLineUtilityService.StartCMD(createCommand, false);
+    }
+
 
 }
