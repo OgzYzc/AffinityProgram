@@ -46,7 +46,7 @@ public class DSCPMiscUtility : IDSCPMiscUtilityService
 
     public void RemoveMockQoS()
     {
-        string createCommand = "powershell -Command \"Remove-NetQosPolicy -Name 'Teams Audio' -Confirm:$false -ErrorAction SilentlyContinue\"";
+        string createCommand = "powershell -Command \"Remove-NetQosPolicy -Name 'MockQoS' -Confirm:$false -ErrorAction SilentlyContinue\"";
         _commandLineUtilityService.StartCMD(createCommand, false);
     }
 
