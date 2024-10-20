@@ -99,7 +99,6 @@ public class VDFConverterUtility : IDisposable, IVDFConverterUtilityService
             }
 
             app.Data = deserializer.Deserialize(input, options);
-
             if (reader.BaseStream.Position != end)
             {
                 throw new InvalidDataException();
@@ -109,9 +108,17 @@ public class VDFConverterUtility : IDisposable, IVDFConverterUtilityService
             Writer.WriteNumber("AppID", app.AppID);
             Writer.WriteString("Name", (string)app.Data?["common"]?["name"]);
             Writer.WriteString("installdir", (string)app.Data?["config"]?["installdir"]);
-            Writer.WriteString("executable", (string)app.Data?["config"]?["launch"]?["0"]?["executable"]);
+            //Loop throughe every key in launch and take the executable name if its end with .exe
+            for (int i = 0; ; i++)
+            {
+                var launchConfig = app.Data?["config"]?["launch"]?[i.ToString()];
+                if (launchConfig == null)                
+                    break;                
 
-
+                string executable = (string)launchConfig["executable"];
+                if (executable != null && executable.EndsWith("exe"))                
+                    Writer.WriteString("executable", executable);                
+            }
             Writer.WriteEndObject();
         }
         while (true);
@@ -160,7 +167,7 @@ public class VDFConverterUtility : IDisposable, IVDFConverterUtilityService
         {
             ArrayPool<byte>.Shared.Return(buffer);
         }
-    }    
+    }
     protected virtual void Dispose(bool disposing)
     {
         if (disposed)

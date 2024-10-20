@@ -100,7 +100,6 @@ public class ReadJsonHelper : IReadJsonHelperService
 
                 foreach (var item in folders)
                 {
-
                     string folderName = Path.GetFileName(item);
 
                     foreach (var pair in gameInstalldir)

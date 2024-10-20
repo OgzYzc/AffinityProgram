@@ -33,7 +33,7 @@ class Program
         Lazy<AffinityHelper> affinityHelper = new Lazy<AffinityHelper>(() => new AffinityHelper(affinityUtility.Value, registryUtility.Value));
         Lazy<MessageLimitHelper> messageLimitHelper = new Lazy<MessageLimitHelper>(() => new MessageLimitHelper(messageLimitUtility.Value, registryUtility.Value));
         Lazy<PriorityHelper> priorityHelper = new Lazy<PriorityHelper>(() => new PriorityHelper(priorityUtility.Value, registryUtility.Value));
-        Lazy<NICSettingsHelper> nicSettingsHelper = new Lazy<NICSettingsHelper>(() => new NICSettingsHelper(registryUtility.Value,processorUtility.Value));
+        Lazy<NICSettingsHelper> nicSettingsHelper = new Lazy<NICSettingsHelper>(() => new NICSettingsHelper(registryUtility.Value, processorUtility.Value));
 
         // Managers 
         Lazy<NICManager> nicManager = new Lazy<NICManager>(() => new NICManager(affinityHelper.Value, messageLimitHelper.Value, priorityHelper.Value, nicSettingsHelper.Value, processorUtility.Value));
@@ -54,7 +54,8 @@ class Program
         Lazy<IVDFConverterUtilityService> vdfConverterUtilityService = new Lazy<IVDFConverterUtilityService>(() => new VDFConverterUtility(pathHelperService.Value));
         Lazy<IReadJsonHelperService> readJsonHelperService = new Lazy<IReadJsonHelperService>(() => new ReadJsonHelper());
         Lazy<IDSCPRegistryUtilityService> dscpRegistryUtilityService = new Lazy<IDSCPRegistryUtilityService>(() => new DSCPRegistryUtility(pathHelperService.Value));
-        Lazy<IDSCPSetterHelper> dscpSetterHelper = new Lazy<IDSCPSetterHelper>(() => new DSCPSetterHelper(dscpMiscUtilityService.Value, vdfConverterUtilityService.Value, pathHelperService.Value, readJsonHelperService.Value, dscpRegistryUtilityService.Value, registryUtility.Value));
+        Lazy<IIFEORegistryUtilityService> ifeoRegistryUtilityService = new Lazy<IIFEORegistryUtilityService>(() => new IFEORegistryUtility(pathHelperService.Value));
+        Lazy<IDSCPSetterHelper> dscpSetterHelper = new Lazy<IDSCPSetterHelper>(() => new DSCPSetterHelper(dscpMiscUtilityService.Value, vdfConverterUtilityService.Value, pathHelperService.Value, readJsonHelperService.Value, dscpRegistryUtilityService.Value, ifeoRegistryUtilityService.Value, registryUtility.Value));
 
         Lazy<IDisplayMenuUtilityService> displayMenuUtilityService = new Lazy<IDisplayMenuUtilityService>(() => new DisplayMenuUtility(processorUtility.Value, findCoreHelperService.Value, dscpSetterHelper.Value, nicManager.Value, pciManager.Value, usbManager.Value));
         Lazy<IDisplaySetupUtilityService> displaySetupUtilityService = new Lazy<IDisplaySetupUtilityService>(() => new DisplaySetupUtility());
@@ -63,7 +64,7 @@ class Program
         Lazy<DisplayMenuHelper> displayMenuHelper = new Lazy<DisplayMenuHelper>(() => new DisplayMenuHelper(displayMenuUtilityService.Value));
         Lazy<DisplaySetupHelper> displaySetupHelper = new Lazy<DisplaySetupHelper>(() => new DisplaySetupHelper(displaySetupUtilityService.Value));
 
-        
+
         Lazy<UserInterfaceManager> userInterfaceManager = new Lazy<UserInterfaceManager>(() => new UserInterfaceManager(displayMenuHelper.Value, displaySetupHelper.Value));
         userInterfaceManager.Value.DisplayInterface();
     }

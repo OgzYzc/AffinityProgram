@@ -18,4 +18,6 @@ public static class Messages
     public static readonly string TaskAdded = "Task added successfully.";
 
     public static readonly string DSCPAdded = "DSCP values added successfully.";
+
+    public static readonly string IFEOAdded = "High Priority values added successfully.";
 }

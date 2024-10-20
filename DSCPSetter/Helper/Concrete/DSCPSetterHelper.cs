@@ -9,13 +9,14 @@ using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace DSCPSetter.Helper.Concrete;
-public class DSCPSetterHelper : IDSCPSetterHelper,IDisposable
+public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
 {
     private readonly IDSCPMiscUtilityService _dscpMiscUtilityService;
     private readonly IVDFConverterUtilityService _vdfConverterUtilityService;
     private readonly IPathHelperService _pathHelperService;
     private readonly IReadJsonHelperService _readJsonHelperService;
     private readonly IDSCPRegistryUtilityService _dscpRegistryUtilityService;
+    private readonly IIFEORegistryUtilityService _ifeoRegistryUtilityService;
     private readonly IRegistryUtilityService _registryUtilityService;
     private bool disposedValue;
 
@@ -25,7 +26,9 @@ public class DSCPSetterHelper : IDSCPSetterHelper,IDisposable
         IPathHelperService pathHelperService,
         IReadJsonHelperService readJsonHelperService,
         IDSCPRegistryUtilityService dscpRegistryUtilityService,
+        IIFEORegistryUtilityService ifeoRegistryUtilityService,
         IRegistryUtilityService registryUtilityService
+
         )
     {
         _dscpMiscUtilityService = dscpMiscUtilityService;
@@ -33,6 +36,7 @@ public class DSCPSetterHelper : IDSCPSetterHelper,IDisposable
         _pathHelperService = pathHelperService;
         _readJsonHelperService = readJsonHelperService;
         _dscpRegistryUtilityService = dscpRegistryUtilityService;
+        _ifeoRegistryUtilityService = ifeoRegistryUtilityService;
         _registryUtilityService = registryUtilityService;
     }
 
@@ -44,10 +48,11 @@ public class DSCPSetterHelper : IDSCPSetterHelper,IDisposable
             ReadJsonFiles();
             AddDSCPRegistrySettings();
             AddScheduledTask();
+            AddIFEORegistrySettings();
         }
         finally
         {
-            Dispose();            
+            Dispose();
         }
     }
     public void RunVDFConverter()
@@ -68,12 +73,19 @@ public class DSCPSetterHelper : IDSCPSetterHelper,IDisposable
             RegistryKeyPermissionCheck.ReadWriteSubTree,
             _registryUtilityService.CreateRegistrySecurity()
         );
-        
     }
 
     public void AddScheduledTask()
     {
         _dscpMiscUtilityService.AddSchedule();
+    }
+    public void AddIFEORegistrySettings()
+    {
+        _ifeoRegistryUtilityService.Create(
+            RegistryPaths.RegistryPathMappings[9],
+            RegistryKeyPermissionCheck.ReadWriteSubTree,
+            _registryUtilityService.CreateRegistrySecurity()
+        );
     }
     ~DSCPSetterHelper()
     {

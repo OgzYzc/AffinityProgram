@@ -41,8 +41,6 @@ public class DSCPRegistryUtility : IDSCPRegistryUtilityService
             }
         }
         /* Clear memory */
-        ReadJsonHelper.gamePaths.Clear();
-        ReadJsonHelper.gameInstalldir.Clear();
         GC.Collect();                   
         GC.WaitForPendingFinalizers();  
 
