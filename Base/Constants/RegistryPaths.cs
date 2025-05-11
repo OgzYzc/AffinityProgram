@@ -13,6 +13,6 @@ public class RegistryPaths
         { 7, @"SOFTWARE\Policies\Microsoft\Windows\QoS" },                                                                      //QoSPath
         //{ 8, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects" }                                              //GPEDITPath(HKCU)
         { 9, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" },                                    //IFEOPath
-        { 10, @"Software\Microsoft\DirectX\UserGpuPreferences" },                                                               //GPUPreferencePath(HKCU)
+        { 10, @"SOFTWARE\Microsoft\DirectX\UserGpuPreferences" },                                                               //GPUPreferencePath(HKCU)
     };
 }

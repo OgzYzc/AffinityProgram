@@ -56,7 +56,7 @@ class Program
         Lazy<IDSCPRegistryUtilityService> dscpRegistryUtilityService = new Lazy<IDSCPRegistryUtilityService>(() => new DSCPRegistryUtility(pathHelperService.Value));
         Lazy<IIFEORegistryUtilityService> ifeoRegistryUtilityService = new Lazy<IIFEORegistryUtilityService>(() => new IFEORegistryUtility(pathHelperService.Value));
         Lazy<IGPUPreferenceUtilityService> gpuPreferenceUtilityService = new Lazy<IGPUPreferenceUtilityService>(() => new GPUPreferenceUtility(pathHelperService.Value));
-        Lazy<IDSCPSetterHelper> dscpSetterHelper = new Lazy<IDSCPSetterHelper>(() => new DSCPSetterHelper(dscpMiscUtilityService.Value, vdfConverterUtilityService.Value, pathHelperService.Value, readJsonHelperService.Value, dscpRegistryUtilityService.Value, ifeoRegistryUtilityService.Value,gpuPreferenceUtilityService.Value, registryUtility.Value));
+        Lazy<IDSCPSetterHelper> dscpSetterHelper = new Lazy<IDSCPSetterHelper>(() => new DSCPSetterHelper(dscpMiscUtilityService.Value, vdfConverterUtilityService.Value, pathHelperService.Value, readJsonHelperService.Value, dscpRegistryUtilityService.Value, ifeoRegistryUtilityService.Value, gpuPreferenceUtilityService.Value, registryUtility.Value));
 
         Lazy<IDisplayMenuUtilityService> displayMenuUtilityService = new Lazy<IDisplayMenuUtilityService>(() => new DisplayMenuUtility(processorUtility.Value, findCoreHelperService.Value, dscpSetterHelper.Value, nicManager.Value, pciManager.Value, usbManager.Value));
         Lazy<IDisplaySetupUtilityService> displaySetupUtilityService = new Lazy<IDisplaySetupUtilityService>(() => new DisplaySetupUtility());

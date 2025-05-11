@@ -1,6 +1,6 @@
 ﻿namespace AffinitySetter.Model.Devices;
 
-internal class PCIModel : BaseModel
+public class PCIModel : BaseModel
 {
     public PCIModel(string PciDeviceID) : base(PciDeviceID)
     {

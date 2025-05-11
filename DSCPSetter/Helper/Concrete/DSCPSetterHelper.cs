@@ -45,9 +45,9 @@ public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
         {
             RunVDFConverter();
             ReadJsonFiles();
-            //AddDSCPRegistrySettings();
-            //AddScheduledTask();
-            //AddIFEORegistrySettings();
+            AddDSCPRegistrySettings();
+            AddScheduledTask();
+            AddIFEORegistrySettings();
             ReadGPUPreferenceRegistrySettings();
             AddGPUPreferenceRegistrySettings();
         }
@@ -95,7 +95,7 @@ public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
 
     }
     public void AddGPUPreferenceRegistrySettings()
-    {       
+    {
         _gpupreferenceUtilityService.Create(
             RegistryPaths.RegistryPathMappings[10],
             RegistryKeyPermissionCheck.ReadWriteSubTree,

@@ -1,4 +1,5 @@
 ﻿using System.Security.AccessControl;
+using AffinitySetter.Model.Devices;
 using Base.Constants;
 using DSCPSetter.Configuration;
 using DSCPSetter.Helper.Abstract;
@@ -6,7 +7,6 @@ using DSCPSetter.Helper.Concrete;
 using DSCPSetter.Model;
 using DSCPSetter.Utility.Abstract;
 using Microsoft.Win32;
-using Windows.Graphics;
 
 namespace DSCPSetter.Utility.Concrete
 {
@@ -14,11 +14,13 @@ namespace DSCPSetter.Utility.Concrete
     {
         IPathHelperService _pathHelperService;
         GPUModel _gpuModel = new();
+        List<PCIModel> PciDeviceInstanceIdList = new();
 
         public static Dictionary<string, int> gameNameCounter = new Dictionary<string, int>();
         public GPUPreferenceUtility(IPathHelperService pathHelperService)
         {
-            _pathHelperService = pathHelperService;            
+            _pathHelperService = pathHelperService;
+            PciDeviceInstanceIdList = new AffinitySetter.Queries.Concrete.DeviceInfo<PCIModel>().GetDevices(GuidClasses.PciGuidClass, deviceId => new PCIModel(deviceId));
         }
 
         public void Create(string keyPath, RegistryKeyPermissionCheck permissionCheck, RegistrySecurity registrySecurity)
@@ -29,7 +31,11 @@ namespace DSCPSetter.Utility.Concrete
                 {
                     foreach (KeyValuePair<string, string> entry in new GPUPreferenceconfiguration().GPUPreferenceValues)
                     {
-                        registryKey.SetValue(item,entry.Key+_gpuModel.AdapterID+entry.Value, RegistryValueKind.String);
+                        if (_gpuModel.AdapterID == null) //PciDeviceInstanceIdList[0] returns external GPU
+                            registryKey.SetValue(item, entry.Key + PciDeviceInstanceIdList[0].DeviceID.Substring(8, 29).Replace("DEV_", "").Replace("SUBSYS_", "").ToString() + ";" + entry.Value, RegistryValueKind.String);
+
+                        else
+                            registryKey.SetValue(item, entry.Key + _gpuModel.AdapterID + entry.Value, RegistryValueKind.String);
                     }
                 }
             }
@@ -44,7 +50,14 @@ namespace DSCPSetter.Utility.Concrete
         {
             using (RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(keyPath))
             {
-                _gpuModel.AdapterID = registryKey.GetValue("DirectXUserGlobalSettings").ToString().Substring(16);
+                try
+                {
+                    _gpuModel.AdapterID = registryKey.GetValue("DirectXUserGlobalSettings").ToString()[16..];
+                }
+                catch (Exception)
+                {
+                    return;
+                }
             }
         }
     }

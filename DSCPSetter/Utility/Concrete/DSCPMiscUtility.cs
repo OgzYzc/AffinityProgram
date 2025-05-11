@@ -20,17 +20,30 @@ public class DSCPMiscUtility : IDSCPMiscUtilityService
         string taskName = "GPUpdateTask";
 
         string queryCommand = $"schtasks /Query /TN \"{taskName}\"";
+        try
+        {
+            var result = _commandLineUtilityService.StartCMD(queryCommand,true);
 
-        string output = _commandLineUtilityService.StartCMD(queryCommand, captureOutput: true);
+            if (result.Contains("Folder:"))
+            {
+                Console.WriteLine($"Task '{taskName}' already exists. No action taken.");
+                return;
+            }
+        }
+        catch
+        {
+            return;
+        }
 
-        if (output.Contains(taskName))
+
+        string createCommand = $"schtasks /Create /TN \"{taskName}\" /TR \"{executablePath} {arguments}\" /SC ONLOGON /RU SYSTEM";
+        _commandLineUtilityService.StartCMD(createCommand, true);
+
+        if (createCommand.Contains(taskName))
         {
             Console.WriteLine($"Task '{taskName}' already exists. No action taken.");
             return;
         }
-
-        string createCommand = $"schtasks /Create /TN \"{taskName}\" /TR \"{executablePath} {arguments}\" /SC ONLOGON /RU SYSTEM";
-        _commandLineUtilityService.StartCMD(createCommand, true);
 
         Console.WriteLine(Messages.TaskAdded);
     }

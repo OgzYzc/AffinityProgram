@@ -4,7 +4,7 @@ using AffinitySetter.Queries.Abstract;
 
 namespace AffinitySetter.Queries.Concrete;
 
-internal static class DeviceInfo
+public static class DeviceInfo
 {
     [DllImport("setupapi.dll", SetLastError = true)]
     internal static extern nint SetupDiGetClassDevs(ref Guid classGuid, string enumerator, nint hwndParent, uint flags);
@@ -28,7 +28,7 @@ internal static class DeviceInfo
         internal nint Reserved;
     }
 }
-internal class DeviceInfo<T> : IDeviceInfoService<T>
+public class DeviceInfo<T> : IDeviceInfoService<T>
 {
     public List<T> GetDevices(Guid classGuid, Func<string, T> converter)
     {

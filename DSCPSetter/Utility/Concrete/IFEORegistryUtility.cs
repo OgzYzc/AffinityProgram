@@ -35,8 +35,6 @@ namespace DSCPSetter.Utility.Concrete
                 }
             }
             /* Clear memory */
-            ReadJsonHelper.gamePaths.Clear();
-            ReadJsonHelper.gameInstalldir.Clear();
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
