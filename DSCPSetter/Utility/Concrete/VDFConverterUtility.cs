@@ -1,12 +1,11 @@
 ﻿//Code taken from : https://github.com/SteamDatabase/SteamAppInfo
-using DSCPSetter.Helper.Abstract;
-using DSCPSetter.Model;
-using DSCPSetter.Utility.Abstract;
-using DSCPSetter.Utility.Concrete;
 using System.Buffers;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
+using DSCPSetter.Helper.Abstract;
+using DSCPSetter.Model;
+using DSCPSetter.Utility.Abstract;
 using ValveKeyValue;
 
 public class VDFConverterUtility : IDisposable, IVDFConverterUtilityService
@@ -112,12 +111,12 @@ public class VDFConverterUtility : IDisposable, IVDFConverterUtilityService
             for (int i = 0; ; i++)
             {
                 var launchConfig = app.Data?["config"]?["launch"]?[i.ToString()];
-                if (launchConfig == null)                
-                    break;                
+                if (launchConfig == null)
+                    break;
 
                 string executable = (string)launchConfig["executable"];
-                if (executable != null && executable.EndsWith("exe"))                
-                    Writer.WriteString("executable", executable);                
+                if (executable != null && executable.EndsWith("exe"))
+                    Writer.WriteString("executable", executable);
             }
             Writer.WriteEndObject();
         }

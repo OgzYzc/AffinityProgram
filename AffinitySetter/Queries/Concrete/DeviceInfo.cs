@@ -1,5 +1,5 @@
-﻿using AffinitySetter.Queries.Abstract;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using AffinitySetter.Queries.Abstract;
 
 
 namespace AffinitySetter.Queries.Concrete;

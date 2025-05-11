@@ -1,11 +1,10 @@
-﻿using AffinitySetter.Utility.Abstract;
+﻿using System.Security.AccessControl;
 using Base.Constants;
 using DSCPSetter.Configuration;
 using DSCPSetter.Helper.Abstract;
 using DSCPSetter.Helper.Concrete;
 using DSCPSetter.Utility.Abstract;
 using Microsoft.Win32;
-using System.Security.AccessControl;
 
 namespace DSCPSetter.Utility.Concrete;
 public class DSCPRegistryUtility : IDSCPRegistryUtilityService
@@ -22,7 +21,8 @@ public class DSCPRegistryUtility : IDSCPRegistryUtilityService
     {
         using (RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(keyPath, permissionCheck, registrySecurity))
         {
-            registryKey.SetValue("Application DSCP Marking Request", "Allowed", RegistryValueKind.String);
+            if (keyPath == Base.Constants.RegistryPaths.RegistryPathMappings[5])
+                registryKey.SetValue("Application DSCP Marking Request", "Allowed", RegistryValueKind.String);
 
             foreach (var item in ReadJsonHelper.gamePaths)
             {
@@ -41,8 +41,8 @@ public class DSCPRegistryUtility : IDSCPRegistryUtilityService
             }
         }
         /* Clear memory */
-        GC.Collect();                   
-        GC.WaitForPendingFinalizers();  
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
 
         Console.WriteLine(Messages.DSCPAdded);
     }

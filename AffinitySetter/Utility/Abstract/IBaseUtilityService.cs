@@ -1,5 +1,5 @@
-﻿using Microsoft.Win32;
-using System.Security.AccessControl;
+﻿using System.Security.AccessControl;
+using Microsoft.Win32;
 
 namespace AffinitySetter.Utility.Abstract;
 

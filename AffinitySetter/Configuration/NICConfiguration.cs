@@ -30,7 +30,7 @@ internal class NICConfiguration
         { "*RssMaxProcGroup", "0" },
     };
 
-    internal Dictionary<string,(string Value,RegistryValueKind Type)> NicValues = new Dictionary<string, (string, RegistryValueKind)>()
+    internal Dictionary<string, (string Value, RegistryValueKind Type)> NicValues = new Dictionary<string, (string, RegistryValueKind)>()
     {
          // Latency
         { "*FlowControl",("0" ,RegistryValueKind.String)},
@@ -39,7 +39,7 @@ internal class NICConfiguration
         { "*LsoV2IPv4",("0" ,RegistryValueKind.String)},
         { "*LsoV2IPv6",("0" ,RegistryValueKind.String)},
         { "*PMNSOffload",("1" ,RegistryValueKind.String)},
-        { "*PMARPOffload",("1" ,RegistryValueKind.String)},  
+        { "*PMARPOffload",("1" ,RegistryValueKind.String)},
         { "*PriorityVLANTag",("1",RegistryValueKind.String )},          // Enabling packet priority for QoS
         { "*PacketDirect",("1" ,RegistryValueKind.String)},
         { "*RscIPv4",("0" ,RegistryValueKind.String)},
@@ -54,7 +54,7 @@ internal class NICConfiguration
         { "EnableLLI",("2" ,RegistryValueKind.String)},                 // TCP PSH flag
         { "EnableDCA",("1" ,RegistryValueKind.String)},
         { "EnableUdpTxScaling",("1" ,RegistryValueKind.DWord)},
-        { "ManyCoreScaling",("1" ,RegistryValueKind.DWord)},      
+        { "ManyCoreScaling",("1" ,RegistryValueKind.DWord)},
         { "ITR",("0" ,RegistryValueKind.String)},
         { "ReceiveScalingMode",("0",RegistryValueKind.String)},         // Disabling this fills up indirection table
         { "TxIntDelay",("0" ,RegistryValueKind.String)},                // This settings supposed to do nothing because we already disabled interrupt moderation but adding here just in case
@@ -78,7 +78,7 @@ internal class NICConfiguration
         { "EnableSavePowerNow",("0" ,RegistryValueKind.String)},
         { "ReduceSpeedOnPowerDown",("0" ,RegistryValueKind.String)},
         { "PnPCapabilities",("24" ,RegistryValueKind.DWord)},
-        { "*SelectiveSuspend",("0" ,RegistryValueKind.String)},        
+        { "*SelectiveSuspend",("0" ,RegistryValueKind.String)},
         { "MediaDisconnectToSleepTimeOut",("0" ,RegistryValueKind.String)},
         { "*WakeOnMagicPacket",("0" ,RegistryValueKind.String)},
         { "*WakeOnPattern",("0" ,RegistryValueKind.String)},

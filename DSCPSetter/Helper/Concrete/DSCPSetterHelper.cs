@@ -2,11 +2,7 @@
 using Base.Constants;
 using DSCPSetter.Helper.Abstract;
 using DSCPSetter.Utility.Abstract;
-using DSCPSetter.Utility.Concrete;
 using Microsoft.Win32;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace DSCPSetter.Helper.Concrete;
 public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
@@ -17,6 +13,7 @@ public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
     private readonly IReadJsonHelperService _readJsonHelperService;
     private readonly IDSCPRegistryUtilityService _dscpRegistryUtilityService;
     private readonly IIFEORegistryUtilityService _ifeoRegistryUtilityService;
+    private readonly IGPUPreferenceUtilityService _gpupreferenceUtilityService;
     private readonly IRegistryUtilityService _registryUtilityService;
     private bool disposedValue;
 
@@ -27,6 +24,7 @@ public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
         IReadJsonHelperService readJsonHelperService,
         IDSCPRegistryUtilityService dscpRegistryUtilityService,
         IIFEORegistryUtilityService ifeoRegistryUtilityService,
+        IGPUPreferenceUtilityService gpuPreferenceUtilityService,
         IRegistryUtilityService registryUtilityService
 
         )
@@ -37,6 +35,7 @@ public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
         _readJsonHelperService = readJsonHelperService;
         _dscpRegistryUtilityService = dscpRegistryUtilityService;
         _ifeoRegistryUtilityService = ifeoRegistryUtilityService;
+        _gpupreferenceUtilityService = gpuPreferenceUtilityService;
         _registryUtilityService = registryUtilityService;
     }
 
@@ -46,9 +45,11 @@ public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
         {
             RunVDFConverter();
             ReadJsonFiles();
-            AddDSCPRegistrySettings();
-            AddScheduledTask();
-            AddIFEORegistrySettings();
+            //AddDSCPRegistrySettings();
+            //AddScheduledTask();
+            //AddIFEORegistrySettings();
+            ReadGPUPreferenceRegistrySettings();
+            AddGPUPreferenceRegistrySettings();
         }
         finally
         {
@@ -83,6 +84,20 @@ public class DSCPSetterHelper : IDSCPSetterHelper, IDisposable
     {
         _ifeoRegistryUtilityService.Create(
             RegistryPaths.RegistryPathMappings[9],
+            RegistryKeyPermissionCheck.ReadWriteSubTree,
+            _registryUtilityService.CreateRegistrySecurity()
+        );
+    }
+    public void ReadGPUPreferenceRegistrySettings()
+    {
+        _gpupreferenceUtilityService.ReadEntry(
+            RegistryPaths.RegistryPathMappings[10]);
+
+    }
+    public void AddGPUPreferenceRegistrySettings()
+    {       
+        _gpupreferenceUtilityService.Create(
+            RegistryPaths.RegistryPathMappings[10],
             RegistryKeyPermissionCheck.ReadWriteSubTree,
             _registryUtilityService.CreateRegistrySecurity()
         );

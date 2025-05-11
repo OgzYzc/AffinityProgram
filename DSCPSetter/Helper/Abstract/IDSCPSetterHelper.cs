@@ -5,5 +5,7 @@ public interface IDSCPSetterHelper
     void ReadJsonFiles();
     void RunVDFConverter();
     void AddDSCPRegistrySettings();
+    void ReadGPUPreferenceRegistrySettings();
+    void AddGPUPreferenceRegistrySettings();
     void AddScheduledTask();
 }

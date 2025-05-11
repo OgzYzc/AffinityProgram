@@ -1,6 +1,6 @@
-﻿using Base.Model;
+﻿using System.Runtime.InteropServices;
+using Base.Model;
 using Base.Utility.Abstract;
-using System.Runtime.InteropServices;
 
 namespace Base.Utility.Concrete;
 public class ProcessorUtilities : IProcessorUtilityService

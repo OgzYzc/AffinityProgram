@@ -1,10 +1,10 @@
-﻿using AffinitySetter.Controller.Concrete;
+﻿using System.Reflection;
+using AffinitySetter.Controller.Concrete;
 using Base.Model;
 using Base.Utility.Abstract;
 using DSCPSetter.Helper.Abstract;
 using FindCore.Helper.Abstract;
 using Presentation.View.Utility.Abstract;
-using System.Reflection;
 
 namespace Presentation.View.Utility.Concrete;
 internal class DisplayMenuUtility : IDisplayMenuUtilityService
@@ -220,7 +220,7 @@ internal class DisplayMenuUtility : IDisplayMenuUtilityService
                     Console.Clear();
                     method.Invoke(instance, null);
 
-                    while (Console.ReadKey(true).Key != ConsoleKey.Backspace);          // Wait for user to press Backspace to print previous menu.
+                    while (Console.ReadKey(true).Key != ConsoleKey.Backspace) ;          // Wait for user to press Backspace to print previous menu.
                     Console.Clear();
                 }
                 else

@@ -1,16 +1,10 @@
-﻿using Base.Constants;
+﻿using System.Security.AccessControl;
+using Base.Constants;
 using DSCPSetter.Configuration;
 using DSCPSetter.Helper.Abstract;
 using DSCPSetter.Helper.Concrete;
 using DSCPSetter.Utility.Abstract;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
-using WinRT;
 
 namespace DSCPSetter.Utility.Concrete
 {
@@ -29,7 +23,7 @@ namespace DSCPSetter.Utility.Concrete
             foreach (var item in ReadJsonHelper.gamePaths)
             {
                 var executable = item.Split(new[] { '\\', '/' }).LastOrDefault(part => part.EndsWith(".exe", StringComparison.OrdinalIgnoreCase));
-                using (RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(keyPath +"\\"+ executable, permissionCheck, registrySecurity))
+                using (RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(keyPath + "\\" + executable, permissionCheck, registrySecurity))
                 {
                     using (RegistryKey ifeoKey = registryKey.CreateSubKey("PerfOptions", permissionCheck, registrySecurity))
                     {

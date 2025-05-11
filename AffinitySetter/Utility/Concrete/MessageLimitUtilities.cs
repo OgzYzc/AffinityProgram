@@ -1,6 +1,6 @@
-﻿using AffinitySetter.Utility.Abstract;
+﻿using System.Security.AccessControl;
+using AffinitySetter.Utility.Abstract;
 using Microsoft.Win32;
-using System.Security.AccessControl;
 
 namespace AffinitySetter.Utility.Concrete;
 

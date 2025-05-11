@@ -1,5 +1,5 @@
-﻿using Presentation.View.Utility.Abstract;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using Presentation.View.Utility.Abstract;
 
 namespace Presentation.View.Utility.Concrete;
 internal class DisplaySetupUtility : IDisplaySetupUtilityService

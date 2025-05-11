@@ -1,6 +1,6 @@
-﻿using Base.Utility.Abstract;
+﻿using System.Numerics;
+using Base.Utility.Abstract;
 using FindCore.Utility.Abstract;
-using System.Numerics;
 
 namespace FindCore.Utility.Concrete;
 

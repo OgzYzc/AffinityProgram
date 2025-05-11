@@ -1,13 +1,12 @@
-﻿using AffinitySetter.Configuration;
+﻿using System.Security.AccessControl;
+using System.Security.Principal;
+using AffinitySetter.Configuration;
 using AffinitySetter.Helper.Concrete;
 using AffinitySetter.Utility.Abstract;
 using Base.Constants;
 using Base.Utility;
 using Base.Utility.Abstract;
 using Microsoft.Win32;
-using System.Diagnostics;
-using System.Security.AccessControl;
-using System.Security.Principal;
 
 namespace AffinitySetter.Utility.Concrete;
 
@@ -32,9 +31,9 @@ public class RegistryUtilities : IRegistryUtilityService
     {
         // Disable-Enable all adapters
         string command = $@"wmic path win32_networkadapter where 'NetEnabled={(state.ToLower() == "disable" ? "TRUE" : "FALSE")}' call {state}";
-        _commandLineUtilityService.StartCMD(command,true);
+        _commandLineUtilityService.StartCMD(command, true);
     }
-   
+
     public void AdapterRegistrySettings(string keyPath, RegistryKeyPermissionCheck permissionCheck, RegistrySecurity registrySecurity)
     {
 
@@ -49,13 +48,13 @@ public class RegistryUtilities : IRegistryUtilityService
                 registryKey.SetValue(item.Key, item.Value.Value, item.Value.Type);
 
             Console.WriteLine("Do you want to add RSS values? (Type 'yes' or 'y')");
-            string ?response = Console.ReadLine()?.ToLower();
+            string? response = Console.ReadLine()?.ToLower();
 
-            RSSRegistrySettings(response,adapterRegistryPath, permissionCheck, registrySecurity);
+            RSSRegistrySettings(response, adapterRegistryPath, permissionCheck, registrySecurity);
 
-            
+
             Console.WriteLine(Messages.NICSettingsAdded);
-        }        
+        }
     }
     public void NdisServiceSettings(string keyPath, RegistryKeyPermissionCheck permissionCheck, RegistrySecurity registrySecurity, int baseCpuNumber, int maxCpuNumber)
     {
@@ -72,6 +71,10 @@ public class RegistryUtilities : IRegistryUtilityService
         using (RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(keyPath, permissionCheck, registrySecurity))
         {
             registryKey.SetValue("DisableTaskOffload", 0, RegistryValueKind.DWord);
+        }
+        using (RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(keyPath + "\\" + "QoS", permissionCheck, registrySecurity))
+        {
+            registryKey.SetValue("Do not use NLA", 1, RegistryValueKind.String);
         }
         Console.WriteLine(Messages.TcpIpServiceSettingsAdded);
 
