@@ -13,6 +13,7 @@ public class FindCoreHelper : IFindCoreHelperService
     private static List<(int, int)>? OrderedCPPCList;
 
     private static int[] CoresHex;
+    public static bool isFindCoreWorked=false;
 
     public FindCoreHelper(IEventReaderService eventReaderService, ICoreListerService coreListerService, ICoreConverterService coreConverterService, ICoreSelectorService coreSelectorService)
     {
@@ -44,6 +45,6 @@ public class FindCoreHelper : IFindCoreHelperService
     public void SelectCores()
     {
         _coreSelectorService.SelectCores(CoresHex);
-
+        isFindCoreWorked = true;
     }
 }

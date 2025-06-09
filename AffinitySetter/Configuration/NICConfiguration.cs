@@ -32,18 +32,25 @@ internal class NICConfiguration
 
     internal Dictionary<string, (string Value, RegistryValueKind Type)> NicValues = new Dictionary<string, (string, RegistryValueKind)>()
     {
-         // Latency
-        { "*FlowControl",("0" ,RegistryValueKind.String)},
-        { "*InterruptModeration",("0" ,RegistryValueKind.String)},
-        { "*LsoV1IPv4",("0" ,RegistryValueKind.String)},
-        { "*LsoV2IPv4",("0" ,RegistryValueKind.String)},
-        { "*LsoV2IPv6",("0" ,RegistryValueKind.String)},
+         // Offload
+        { "*LsoV1IPv4",("1" ,RegistryValueKind.String)},
+        { "*LsoV2IPv4",("1" ,RegistryValueKind.String)},
+        { "*LsoV2IPv6",("1" ,RegistryValueKind.String)},
         { "*PMNSOffload",("1" ,RegistryValueKind.String)},
         { "*PMARPOffload",("1" ,RegistryValueKind.String)},
-        { "*PriorityVLANTag",("1",RegistryValueKind.String )},          // Enabling packet priority for QoS
+        { "*IPChecksumOffloadIPv4",("3" ,RegistryValueKind.String)},
+        { "*TCPChecksumOffloadIPv4",("3" ,RegistryValueKind.String)},
+        { "*TCPChecksumOffloadIPv6",("3" ,RegistryValueKind.String)},
+        { "*UDPChecksumOffloadIPv4",("3" ,RegistryValueKind.String)},
+        { "*UDPChecksumOffloadIPv6",("3" ,RegistryValueKind.String)},   
+        { "*UsoIPv4",("1" ,RegistryValueKind.String)},   
+        { "*UsoIPv6",("1" ,RegistryValueKind.String)},
+        { "*RscIPv4",("1" ,RegistryValueKind.String)},
+        { "*RscIPv6",("1" ,RegistryValueKind.String)},
+         // Latency
+        { "*FlowControl",("0" ,RegistryValueKind.String)},
+        { "*InterruptModeration",("0" ,RegistryValueKind.String)},        
         { "*PacketDirect",("1" ,RegistryValueKind.String)},
-        { "*RscIPv4",("0" ,RegistryValueKind.String)},
-        { "*RscIPv6",("0" ,RegistryValueKind.String)},
         { "*ReceiveBuffers",("2048" ,RegistryValueKind.String)},
         { "*TransmitBuffers",("2048" ,RegistryValueKind.String)},
         { "CoalesceBufferSize",("0",RegistryValueKind.String )},        // Coalescing

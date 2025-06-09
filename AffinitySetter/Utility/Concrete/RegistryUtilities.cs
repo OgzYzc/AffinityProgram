@@ -30,7 +30,10 @@ public class RegistryUtilities : IRegistryUtilityService
     public void SetAdapterState(string state)
     {
         // Disable-Enable all adapters
-        string command = $@"wmic path win32_networkadapter where 'NetEnabled={(state.ToLower() == "disable" ? "TRUE" : "FALSE")}' call {state}";
+        //string command = $@"wmic path win32_networkadapter where 'NetEnabled={(state.ToLower() == "disable" ? "TRUE" : "FALSE")}' call {state}";
+        string command = state.ToLower() == "disable"
+        ? "powershell -Command \"Disable-NetAdapter -Name 'Ethernet' -Confirm:$false\""
+        : "powershell -Command \"Enable-NetAdapter -Name 'Ethernet'-Confirm:$false\"";
         _commandLineUtilityService.StartCMD(command, true);
     }
 
@@ -85,11 +88,22 @@ public class RegistryUtilities : IRegistryUtilityService
         if (response == "yes" || response == "y")
         {
             Dictionary<string, string> selectedRssValues = _processorUtilityService.GetProcessorInformation().IsSMTEnabled ? new NICConfiguration().smtRssValues : new NICConfiguration().nonSmtRssValues;
+
             foreach (KeyValuePair<string, string> value in selectedRssValues)
+            {
                 using (RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(keyPath, permissionCheck, registrySecurity))
                 {
-                    registryKey.SetValue(value.Key, value.Value, RegistryValueKind.String);
+                    if (FindCore.Helper.Concrete.FindCoreHelper.isFindCoreWorked)
+                    {
+                        if (value.Key == "*RssBaseProcNumber")
+                            registryKey.SetValue(value.Key, FindCore.Utility.Concrete.CoreSelector.FindCoreNIC, RegistryValueKind.String);
+                        else
+                            registryKey.SetValue(value.Key, value.Value, RegistryValueKind.String);
+                    }
+                    else
+                        registryKey.SetValue(value.Key, value.Value, RegistryValueKind.String);
                 }
+            }
 
             Console.WriteLine(Messages.RSSSettingsAdded);
         }

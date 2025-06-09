@@ -1,5 +1,4 @@
-﻿using AffinitySetter.Utility.Abstract;
-using Base.Constants;
+﻿using AffinitySetter.Utility.Abstract;using Base.Constants;
 using Base.Utility.Abstract;
 using Microsoft.Win32;
 
@@ -32,7 +31,12 @@ public class NICSettingsHelper
 
     private void ConfigureNdisServiceSettings()
     {
+        if(FindCore.Helper.Concrete.FindCoreHelper.isFindCoreWorked=true)
         _registryUtilityService.NdisServiceSettings(RegistryPaths.RegistryPathMappings[4],
+            RegistryKeyPermissionCheck.ReadWriteSubTree, _registryUtilityService.CreateRegistrySecurity(),
+            FindCore.Utility.Concrete.CoreSelector.FindCoreNIC, 2);
+        else
+            _registryUtilityService.NdisServiceSettings(RegistryPaths.RegistryPathMappings[4],
             RegistryKeyPermissionCheck.ReadWriteSubTree, _registryUtilityService.CreateRegistrySecurity(),
             (_processorUtilityService.GetProcessorInformation().IsSMTEnabled ? 6 : 3)
             , 2);

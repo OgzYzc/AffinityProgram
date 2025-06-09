@@ -27,9 +27,5 @@ public class CommandLineUtility : ICommandLineUtilityService
 
             return output;
         }
-
-        //Putting these here just in case
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
     }
 }

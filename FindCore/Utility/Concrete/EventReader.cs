@@ -21,8 +21,11 @@ public class EventReader : IEventReaderService
                 Console.WriteLine("\n" + "Error reading Event Viewer. Make sure you didn't disable needed services and do not use any kind of Log Clearer script.");
                 throw new NullReferenceException();
             }
-
-            int coreCount = _processorUtilityService.GetProcessorInformation().PhysicalProcessorCount;
+            int coreCount = 0;
+            if (_processorUtilityService.GetProcessorInformation().IsSMTEnabled)
+                coreCount = _processorUtilityService.GetProcessorInformation().LogicalProcessorCount;
+            else
+                coreCount = _processorUtilityService.GetProcessorInformation().PhysicalProcessorCount;
 
             List<(int, int)> messagesSet = new();                       // ProcessNumber, MaxPerformancePercentage
 

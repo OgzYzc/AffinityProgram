@@ -23,31 +23,30 @@ public class CoreConverter : ICoreConverterService
             coreList[i] = coreNumber;
         }
 
-        if (_processorUtilityService.GetProcessorInformation().IsSMTEnabled)
-        {
+        //if (_processorUtilityService.GetProcessorInformation().IsSMTEnabled)
+        //{
 
-            int[] tempCoreList = new int[coreList.Length / 2];          // If SMT is enabled, reduce the core list size by half
-            for (int i = 0; i < tempCoreList.Length; i++)
-            {
-                tempCoreList[i] = coreList[i * 2];
-            }
-            coreList = tempCoreList;
-        }
+        //    int[] tempCoreList = new int[coreList.Length / 2];          // If SMT is enabled, reduce the core list size by half
+        //    for (int i = 0; i < tempCoreList.Length; i++)
+        //    {
+        //        tempCoreList[i] = coreList[i * 2];
+        //    }
+        //    coreList = tempCoreList;
+        //}
 
         return coreList;
     }
 
     public void ConvertToArray(int[] coreNum, byte[] arrayModel)
     {
-
         BigInteger valueToHex = coreNum[0];
         byte[] tempBytes = valueToHex.ToByteArray();
 
         int byteSize = tempBytes.Length;                                // Check if value has double zero
-        while (byteSize > 1 && tempBytes[byteSize - 1] == 0)
-        {
-            byteSize--;
-        }
+        //while (byteSize > 1 && tempBytes[byteSize - 1] == 0)
+        //{
+        //    byteSize--;
+        //}
 
         Array.Copy(tempBytes, 0, arrayModel, 0, byteSize);
     }
